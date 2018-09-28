@@ -70,4 +70,14 @@ public class Main {
      }
    }
 
+   static void interpolasi(Double[][] mtrxHasil, int NBrsEff, int NKolEff){
+    Double[][] mtrxInter = new Double[100][100];
+    for (int i =1; i <= NBrsEff; i++){
+      for (int j =1; j <= NBrsEff; j++){
+        mtrxInter[i][j] = Math.pow(mtrxHasil[i][1],j-1)
+      }
+      mtrxInter[i][NBrsEff+1] = mtrxHasil[i][2];
+    }
+    //Tinggal nunggu Gauss GaussJordan sma nunggu nama fungsi bagian ikra 
+   }
 }
