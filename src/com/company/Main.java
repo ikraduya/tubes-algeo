@@ -2,8 +2,14 @@ package com.company;
 import java.io.*;
 import java.util.Scanner;
 
-public class Main {
+import javax.management.StandardEmitterMBean;
+import javax.swing.plaf.synth.SynthEditorPaneUI;
+import javax.swing.plaf.synth.SynthTextAreaUI;
+import java.sql.SQLSyntaxErrorException;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
+public class Main {
     Matrix Mat;
     static Double[][] mtrxHasil = new Double[100][100]; //Matriks untuk menyimpan data SPL
     static int NBrsEff = 1; //Jumlah baris mtrxHasil. Asumsi input tidak pernah kosong
@@ -15,41 +21,40 @@ public class Main {
     static int pilihanInpt; //Variabel untuk menampung pilihan user
 	
     public static void main(String[] args) throws IOException {
-	while (!selesai){
-	  System.out.println("MENU");
-	  System.out.println("1. Sistem Persamaan Linear");
-	  System.out.println("2. Interpolasi Problem");
-	  System.out.println("3. Selesai");
-	  System.out.print("Pilihan : ");
-	  pilihanProblem = keyboard.nextInt(); //Memasukkan pilihan problem
+        while (!selesai) {
+          System.out.println("MENU");
+          System.out.println("1. Sistem Persamaan Linear");
+          System.out.println("2. Interpolasi Problem");
+          System.out.println("3. Selesai");
+          System.out.print("Pilihan : ");
+          pilihanProblem = keyboard.nextInt(); //Memasukkan pilihan problem
 
-	  if (pilihanProblem == 3){
-	    selesai = true; //Menghentikan program
-	  }
+          if (pilihanProblem == 3){
+            selesai = true; //Menghentikan program
+          }
 
-	  if (!selesai){
-	    System.out.println("Metode Input");
+          if (!selesai){
+            System.out.println("Metode Input");
             System.out.println("1. File txt eksternal");
-	    System.out.println("2. Matriks masukkan");
-	    System.out.print("Pilihan : ");
-	    pilihanInpt = keyboard.nextInt(); //Memasukkan pilihan metode input
+            System.out.println("2. Matriks masukkan");
+            System.out.print("Pilihan : ");
+            pilihanInpt = keyboard.nextInt(); //Memasukkan pilihan metode input
 
-	    if (pilihanInpt == 1){
-	      BacaFile(mtrxHasil,NBrsEff,NKolEff);
-	    }
-	    else{
-	      BacaMatriks(mtrxHasil,NBrsEff,NKolEff);
-	    }
+            if (pilihanInpt == 1){
+              BacaFile(mtrxHasil,NBrsEff,NKolEff);
+            } else{
+              BacaMatriks(mtrxHasil,NBrsEff,NKolEff);
+            }
 
-	    System.out.println("Metode Penyelesaian");
-	    System.out.println("1. Eleminasi Gauss");
-	    System.out.println("2. Eleminasi GaussJordan");
-	    System.out.print("Pilihan : ");
-	    pilihanMetode = keyboard.nextInt(); //Memasukkan pilihan metode penyelesaian
-	 }
-       }
+            System.out.println("Metode Penyelesaian");
+            System.out.println("1. Eleminasi Gauss");
+            System.out.println("2. Eleminasi GaussJordan");
+            System.out.print("Pilihan : ");
+            pilihanMetode = keyboard.nextInt(); //Memasukkan pilihan metode penyelesaian
+          }
+        }
     }
-	
+
     static void BacaMatriks (Double[][] mtrxHasil, int NBrsEff, int NKolEff)
     //I.S mtrxHasil, NBrsEff, dan NBrsKol sembarang.
     //F.S mtrxHasil, NBrsEff, dan NBrsKol terdefinisi sesuai inputan user
