@@ -2,15 +2,7 @@ package com.company;
 import java.io.*;
 import java.util.Scanner;
 
-import javax.management.StandardEmitterMBean;
-import javax.swing.plaf.synth.SynthEditorPaneUI;
-import javax.swing.plaf.synth.SynthTextAreaUI;
-import java.sql.SQLSyntaxErrorException;
-import java.util.Arrays;
-import java.util.stream.IntStream;
-
 public class Main {
-    Matrix Mat;
     static Double[][] mtrxHasil = new Double[100][100]; //Matriks untuk menyimpan data SPL
     static int NBrsEff = 1; //Jumlah baris mtrxHasil. Asumsi input tidak pernah kosong
     static int NKolEff = 1; //Jumlah kolom mtrxHasil. Asumsi input tidak pernah kosong

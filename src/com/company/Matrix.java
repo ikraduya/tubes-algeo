@@ -1,34 +1,35 @@
 package com.company;
 
 public class Matrix {
-    Double[][] mat;
+    Double[][] matOri;
 
     int NBrsEff;
     int NKolEff;
-
-    Matrix() {
-    }
+    int NKolEffAug;
 
     Matrix(Double[][] mtrxHasil, int NBrsEff, int NKolEff) {
-        mat = new Double[NBrsEff][NKolEff];
-        mat = mtrxHasil;
+        this.matOri = new Double[NBrsEff+1][NKolEff+1];
+        this.matOri = mtrxHasil;
+        this.NBrsEff = NBrsEff;
+        this.NKolEffAug = NKolEff;
+        this.NKolEff = NKolEff - 1;
     }
 
-    private static int[] obtainFreeVarCol(float[][] mat, int matLen)
+    private int[] obtainFreeVarCol(Double[][] mat)
     // I.S augmented matrix, ukuran matrix
     // F.S mengeluarkan array menunjukkan kolom mana saja yang merupakan free variabel (freeVarCol)
     {
         int i, j;
 
-        boolean[] notFreeVarColBol = new boolean[matLen];
+        boolean[] notFreeVarColBol = new boolean[this.NKolEff+1];
         // init not free var col
-        for (j=0; j<matLen; j++) {
+        for (j=1; j<=this.NKolEff; j++) {
             notFreeVarColBol[j] = true;
         }
         // mark not free var col
         int notFreeVarColCount = 0;
-        for (i=0; i<matLen; i++) {
-            for (j=0; j<matLen; j++) {
+        for (i=1; i<=this.NBrsEff; i++) {
+            for (j=1; j<=this.NKolEff; j++) {
                 if (mat[i][j] == 1) {
                     notFreeVarColBol[j] = false;
                     notFreeVarColCount++;
@@ -38,8 +39,8 @@ public class Matrix {
         }
         // get free var col array
         int freeVarColCount = 0;
-        int[] freeVarCol = new int[matLen - notFreeVarColCount];
-        for (j=0; j<matLen; j++) {
+        int[] freeVarCol = new int[this.NKolEff - notFreeVarColCount];
+        for (j=1; j<=this.NKolEff; j++) {
             if (notFreeVarColBol[j]) {
                 freeVarCol[freeVarColCount] = j;
                 freeVarColCount++;
@@ -74,7 +75,7 @@ public class Matrix {
         return i;
     }
 
-    public static String solutionG(float[][] mat)
+    public String solutionG()
     // I.S augmented matrix yang telah berbentuk matriks eselon
     // F.S mengeluarkan string solusi persamaan, tulisan "Tidak mempunyai solusi", ataupun solusi parametrik
     {
@@ -82,32 +83,32 @@ public class Matrix {
         int ct; // counter variabel
         String solution;
 
-        int l = mat.length; // matrix length
+        Double[][] mat = this.matOri;
 
         /* Parametrik Check */
         boolean parametrik = false; // parametrik solution indicator
         ct = 0;
-        for (i=l-1; i>=0; i--) {
+        for (i=this.NBrsEff; i>=1; i--) {
             ct = 0;
-            for (j=0; j<l+1; j++) {
+            for (j=1; j<=this.NKolEffAug; j++) {
                 if (mat[i][j] == 0) {
                     ct++;
                 }
             }
-            if (ct == l + 1) {
+            if (ct == this.NKolEffAug) {
                 parametrik = true;
                 break;
             }
         }
         if (parametrik) {
-            int k; float mult;
-            for (i=l-1; i>0; i--) {
-                for (j=0; j<l; j++) {
+            int k; double mult;
+            for (i=this.NBrsEff; i>=1; i--) {
+                for (j=1; j<=this.NKolEff; j++) {
                     if (mat[i][j] == 1) {
                         for (k=i-1; k>=0; k--) {
                             mult = mat[k][j];
-                            mat[k][j] = 0;
-                            mat[k][l] -= mult * mat[i][l];
+                            mat[k][j] = 0.0;
+                            mat[k][this.NKolEffAug] -= mult * mat[i][this.NKolEffAug];
                         }
                         break;
                     }
@@ -115,32 +116,32 @@ public class Matrix {
             }
 
             // Obtain free var col
-            int[] freeVarCol = obtainFreeVarCol(mat, l);
+            int[] freeVarCol = obtainFreeVarCol(mat);
             int freeVarColCount = freeVarCol.length;
 
             // Produce solution
             solution = "";
             char[] constChar = { 's', 't', 'u', 'v', 'w', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
             int constCharIdx;
-            for (j=0; j<l; j++) {
+            for (j=1; j<=this.NKolEff; j++) {
                 if (isColFree(freeVarCol, freeVarColCount, j)) {
                     constCharIdx = searchFreeVarIdx(freeVarCol, freeVarColCount, j);
-                    solution += "x" + Integer.toString(j + 1) + " = " + constChar[constCharIdx];
+                    solution += "x" + Integer.toString(j) + " = " + constChar[constCharIdx];
                 } else {
-                    for (i=0; i<l; i++) {
+                    for (i=0; i<this.NBrsEff; i++) {
                         if (mat[i][j] == 1) {
-                            solution += "x" + Integer.toString(j+1) + " =";
-                            if (mat[i][l] != 0) {
-                                solution += " " + mat[i][l];
-                            } else if (mat[i][l] == 0 && !isColFree(freeVarCol, freeVarColCount, l)) {
-                                solution += " " + mat[i][l];
+                            solution += "x" + Integer.toString(j) + " =";
+                            if (mat[i][this.NKolEffAug] != 0) {
+                                solution += " " + mat[i][this.NKolEffAug];
+                            } else if (mat[i][this.NKolEffAug] == 0 && !isColFree(freeVarCol, freeVarColCount, this.NKolEffAug)) {
+                                solution += " " + mat[i][this.NKolEffAug];
                             }
                             for (k=0; k<freeVarColCount; k++) {
                                 if (mat[i][freeVarCol[k]] > 0) {
                                     solution += " - " + mat[i][freeVarCol[k]] + constChar[k];
                                 } else if (mat[i][freeVarCol[k]] < 0) {
-                                    solution += " " + mat[i][freeVarCol[k]] + constChar[k];
-                                    if (k != freeVarColCount - 1) {
+                                    solution += " + " + (-1 * mat[i][freeVarCol[k]]) + constChar[k];
+                                    if (k != freeVarColCount) {
                                         solution += " ";
                                     }
                                 }
@@ -149,7 +150,7 @@ public class Matrix {
                         }
                     }
                 }
-                if (j != l - 1) {
+                if (j != this.NBrsEff) {
                     solution += "\n";
                 }
             }
@@ -159,14 +160,14 @@ public class Matrix {
         /* No Solution Check */
         boolean noSolution = false; // no solution indicator
         ct = 0;
-        for (i=l-1; i>=0; i--) {
+        for (i=this.NBrsEff; i>=1; i--) {
             ct = 0;
-            for (j=0; j<l; j++) {
+            for (j=1; j<=this.NKolEff; j++) {
                 if (mat[i][j] == 0) {
                     ct++;
                 }
             }
-            if (ct == l && mat[i][j] != 0) {
+            if (ct == this.NKolEff) {
                 noSolution = true;
                 break;
             }
@@ -176,25 +177,25 @@ public class Matrix {
         }
 
         /* Solution Check */
-        float mult;
-        for (i=l-1; i>0; i--) {
-            for (j=i-1; j>=0; j--) {
+        Double mult;
+        for (i=this.NBrsEff; i>=1; i--) {
+            for (j=i-1; j>=1; j--) {
                 mult = mat[j][i];
-                mat[j][i] = 0;
-                mat[j][l] -= mult * mat[j+1][l];
+                mat[j][i] = 0.0;
+                mat[j][this.NKolEffAug] -= mult * mat[i][this.NKolEffAug];
             }
         }
         solution = "";
-        for (i=0; i<l; i++) {
-            solution += ("x" + Integer.toString(i+1) + " = " + Float.toString(mat[i][l]));
-            if (i != l - 1) {
+        for (i=1; i<=this.NBrsEff; i++) {
+            solution += ("x" + Integer.toString(i) + " = " + Double.toString(mat[i][this.NKolEffAug]));
+            if (i != this.NBrsEff) {
                 solution += (", ");
             }
         }
         return (solution);
     }
 
-    public static String solutionGJ(float[][] mat)
+    public String solutionGJ()
     // I.S augmented matrix yang telah berbentuk reduced row eselon form
     // F.S mengeluarkan string solusi persamaan, tulisan "Tidak mempunyai solusi", ataupun solusi parametrik
     {
@@ -202,50 +203,65 @@ public class Matrix {
         int ct; // counter variabel
         String solution;
 
-        int l = mat.length; // matrix length
+        Double[][] mat = this.matOri;
 
         /* Parametrik Check */
         boolean parametrik = false; // parametrik solution indicator
         ct = 0;
-        for (i=l-1; i>=0; i--) {
+        for (i=this.NBrsEff; i>=1; i--) {
             ct = 0;
-            for (j=0; j<l+1; j++) {
+            for (j=1; j<=this.NKolEffAug; j++) {
                 if (mat[i][j] == 0) {
                     ct++;
                 }
             }
-            if (ct == l + 1) {
+            if (ct == this.NKolEffAug) {
                 parametrik = true;
                 break;
             }
         }
         if (parametrik) {
+            int k; double mult;
+            for (i=this.NBrsEff; i>=1; i--) {
+                for (j=1; j<=this.NKolEff; j++) {
+                    if (mat[i][j] == 1) {
+                        for (k=i-1; k>=0; k--) {
+                            mult = mat[k][j];
+                            mat[k][j] = 0.0;
+                            mat[k][this.NKolEffAug] -= mult * mat[i][this.NKolEffAug];
+                        }
+                        break;
+                    }
+                }
+            }
+
             // Obtain free var col
-            int[] freeVarCol = obtainFreeVarCol(mat, l);
+            int[] freeVarCol = obtainFreeVarCol(mat);
             int freeVarColCount = freeVarCol.length;
 
             // Produce solution
-            int k;
             solution = "";
             char[] constChar = { 's', 't', 'u', 'v', 'w', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
             int constCharIdx;
-            for (j=0; j<l; j++) {
+            for (j=1; j<=this.NKolEff; j++) {
                 if (isColFree(freeVarCol, freeVarColCount, j)) {
                     constCharIdx = searchFreeVarIdx(freeVarCol, freeVarColCount, j);
-                    solution += "x" + Integer.toString(j + 1) + " = " + constChar[constCharIdx];
+                    solution += "x" + Integer.toString(j) + " = " + constChar[constCharIdx];
                 } else {
-                    for (i=0; i<l; i++) {
+                    for (i=0; i<this.NBrsEff; i++) {
                         if (mat[i][j] == 1) {
-                            solution += "x" + Integer.toString(j+1) + " =";
-                            if (mat[i][l] != 0) {
-                                solution += " " + mat[i][l];
+                            solution += "x" + Integer.toString(j) + " =";
+                            if (mat[i][this.NKolEffAug] != 0) {
+                                solution += " " + mat[i][this.NKolEffAug];
+                            } else if (mat[i][this.NKolEffAug] == 0 && !isColFree(freeVarCol, freeVarColCount, this.NKolEffAug)) {
+                                solution += " " + mat[i][this.NKolEffAug];
                             }
                             for (k=0; k<freeVarColCount; k++) {
                                 if (mat[i][freeVarCol[k]] > 0) {
                                     solution += " - " + mat[i][freeVarCol[k]] + constChar[k];
                                 } else if (mat[i][freeVarCol[k]] < 0) {
-                                    solution += " " + mat[i][freeVarCol[k]] + constChar[k];
-                                    if (k != freeVarColCount - 1) {
+                                    solution += " + " + (-1 * mat[i][freeVarCol[k]]) + constChar[k];
+                                    if (k != freeVarColCount) {
                                         solution += " ";
                                     }
                                 }
@@ -254,7 +270,7 @@ public class Matrix {
                         }
                     }
                 }
-                if (j != l - 1) {
+                if (j != this.NBrsEff) {
                     solution += "\n";
                 }
             }
@@ -264,14 +280,14 @@ public class Matrix {
         /* No Solution Check */
         boolean noSolution = false; // no solution indicator
         ct = 0;
-        for (i=l-1; i>=0; i--) {
+        for (i=this.NBrsEff; i>=1; i--) {
             ct = 0;
-            for (j=0; j<l; j++) {
+            for (j=1; j<=this.NKolEff; j++) {
                 if (mat[i][j] == 0) {
                     ct++;
                 }
             }
-            if (ct == l && mat[i][j] != 0) {
+            if (ct == this.NKolEff) {
                 noSolution = true;
                 break;
             }
@@ -282,20 +298,22 @@ public class Matrix {
 
         /* Solution Check */
         solution = "";
-        for (i=0; i<l; i++) {
-            solution += ("x" + Integer.toString(i+1) + " = " + Float.toString(mat[i][l]));
-            if (i != l - 1) {
-                solution += ("\n");
+        for (i=1; i<=this.NBrsEff; i++) {
+            solution += ("x" + Integer.toString(i) + " = " + Double.toString(mat[i][this.NKolEffAug]));
+            if (i != this.NBrsEff) {
+                solution += (", ");
             }
         }
         return (solution);
     }
 
-    public static void printmat(float[][] mat) {
+    public void printmat() {
         int i, j;
-        for (i=0; i<mat.length; i++) {
-            for (j=0; j<mat[0].length; j++) {
-                System.out.print(Float.toString(mat[i][j]) + " ");
+        Double[][] mat = this.matOri;
+
+        for (i=1; i<=this.NBrsEff; i++) {
+            for (j=1; j<=this.NKolEffAug; j++) {
+                System.out.print(Double.toString(mat[i][j]) + " ");
             }
             System.out.println("");
         }
