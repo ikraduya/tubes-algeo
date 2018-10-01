@@ -14,7 +14,10 @@ public class Matrix {
         mat = mtrxHasil;
     }
 
-    private static int[] obtainFreeVarCol(float[][] mat, int matLen) {
+    private static int[] obtainFreeVarCol(float[][] mat, int matLen)
+    // I.S augmented matrix, ukuran matrix
+    // F.S mengeluarkan array menunjukkan kolom mana saja yang merupakan free variabel (freeVarCol)
+    {
         int i, j;
 
         boolean[] notFreeVarColBol = new boolean[matLen];
@@ -46,7 +49,10 @@ public class Matrix {
         return freeVarCol;
     }
 
-    private static boolean isColFree(int[] arr, int arrLen, int x) {
+    private static boolean isColFree(int[] arr, int arrLen, int x)
+    // I.S freeVarCol, neff freeVarCol, indeks kolom
+    // F.S mengeluarkan true apabila kolom pada matriks tersebut merupakan variabel bebas
+    {
         for (int i=0; i<arrLen; i++) {
             if (arr[i] == x) {
                 return true;
@@ -55,7 +61,10 @@ public class Matrix {
         return false;
     }
 
-    private static int searchFreeVarIdx(int[] arr, int arrLen, int x) {
+    private static int searchFreeVarIdx(int[] arr, int arrLen, int x)
+    // I.S freeVarCol, neff freeVarCol, indeks kolom (x)
+    // F.S mengeluarkan indeks nilai x pada array freeVarCol
+    {
         int i;
         for (i=0; i<arrLen; i++) {
             if (arr[i] == x) {
@@ -65,7 +74,10 @@ public class Matrix {
         return i;
     }
 
-    public static String solutionG(float[][] mat) {
+    public static String solutionG(float[][] mat)
+    // I.S augmented matrix yang telah berbentuk matriks eselon
+    // F.S mengeluarkan string solusi persamaan, tulisan "Tidak mempunyai solusi", ataupun solusi parametrik
+    {
         int i, j;   // iterator var
         int ct; // counter variabel
         String solution;
@@ -182,7 +194,10 @@ public class Matrix {
         return (solution);
     }
 
-    public static String solutionGJ(float[][] mat) {
+    public static String solutionGJ(float[][] mat)
+    // I.S augmented matrix yang telah berbentuk reduced row eselon form
+    // F.S mengeluarkan string solusi persamaan, tulisan "Tidak mempunyai solusi", ataupun solusi parametrik
+    {
         int i, j;   // iterator var
         int ct; // counter variabel
         String solution;
