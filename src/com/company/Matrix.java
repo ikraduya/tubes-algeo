@@ -357,7 +357,8 @@ public class Matrix {
         
         //Baris di swap
         SwapBaris(mtrxInp, 1, BrsMax);
-
+        
+        //Membentuk segitiga 0 di kiri bawah
         for (pass=1;pass<=this.NKolEffAug-2;pass++){
             for (i=pass+1;i<=NBrsEff;i++){
                 Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
@@ -366,7 +367,8 @@ public class Matrix {
                 }
             }
         }
-
+        
+        //Membentuk bilangan terdepan dari tiap baris menjadi 1
         for (i=1;i<=NBrsEff;i++){
             for (j=1;j<=this.NKolEffAug-1;j++){
                 if (mtrxInp[i][j]!=0.0){
