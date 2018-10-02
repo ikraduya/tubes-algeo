@@ -322,7 +322,70 @@ public class Matrix {
 
 
     // Gauss Elimination Method
+    //Procedur Swap Baris
+    static void SwapBaris(double[][] Matriks, int NKolEff, int Brs1, int Brs2){
+            //Brs1 dan Brs2 merupakan matriks yang mau di swap
+            int j;
+            double Temp;
+            for (j=1;j<=NKolEff;j++){
+                Temp=Matriks[Brs1][j];
+                Matriks[Brs1][j]=Matriks[Brs2][j];
+                Matriks[Brs2][j]=Temp;
+            }
+    }
+    
+    //Procedur Gauss
+    static void Gauss(double[][] mtrxHasil, int NBrsEff, int NKolEff){
+        /*KAMUS*/
+        int i, j, k;
+        int pass;
+        double Max, Temp;
+        int BrsMax;
+        
 
+        /*ALGORITMA*/
+        //Mencari maksimum dari kolom pertama
+        Max=mtrxHasil[1][1];
+        BrsMax=1;
+        for (i=2;i<=NBrsEff;i++){
+            if (mtrxHasil[i][1]>Max){
+                Max=mtrxHasil[i][1];
+                BrsMax=i;
+            }
+        }
+        
+        //Baris di swap
+        SwapBaris(mtrxHasil, NKolEff, 1, BrsMax);
+        
+
+        for (pass=1;pass<=NKolEff-2;pass++){
+            for (i=pass+1;i<=NBrsEff;i++){
+                Temp=mtrxHasil[i][pass]/mtrxHasil[pass][pass];
+                for (j=1;j<=NKolEff;j++){
+                    
+                    mtrxHasil[i][j]=mtrxHasil[i][j]-(Temp*mtrxHasil[pass][j]);
+                   
+                }
+            }
+        }
+
+        for (i=1;i<=NBrsEff;i++){
+            for (j=1;j<=NKolEff;j++){
+                if (mtrxHasil[i][j]!=0.0){
+                    Temp=mtrxHasil[i][j];
+                    for (k=1;k<=NKolEff;k++){
+                        if (mtrxHasil[i][k]!=0.0){
+                            mtrxHasil[i][k]=mtrxHasil[i][k]/Temp;
+                        }
+                        
+                    }
+                    break;
+                }
+            }
+        }
+
+    }
+    
     // Gauss-Jordan Elimination Method
 
     // Interpolate Matrix
