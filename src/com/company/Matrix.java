@@ -368,7 +368,7 @@ public class Matrix {
             }
         }
         
-        //Membentuk bilangan terdepan dari tiap baris menjadi 1
+        //Membentuk leading coefficients dari tiap baris menjadi 1
         for (i=1;i<=NBrsEff;i++){
             for (j=1;j<=this.NKolEffAug-1;j++){
                 if (mtrxInp[i][j]!=0.0){
@@ -387,6 +387,25 @@ public class Matrix {
     }
     
     // Gauss-Jordan Elimination Method
+    static void GaussJordan(double[][] Matriks, int NBrsEff, int NKolEff){
+        /*KAMUS*/
+        int i, j, k;
+        double Temp;
+        /*ALGORITMA*/
+        //Mengubah matriks jadi bentuk row echelon
+        Gauss(Matriks, NBrsEff, NKolEff);
+        //Reverse engineering Gauss
+        for (k=NBrsEff;k>=1;k--){
+            for (i=k-1;i>=1;i--){
+                Temp=Matriks[i][k]/Matriks[k][k];
+                for (j=NKolEff;j>=1;j--){
+                    Matriks[i][j]-=Temp*Matriks[k][j];
+                }
+            }
+        }
+        
+
+    }
 
     // Interpolate Matrix
 
