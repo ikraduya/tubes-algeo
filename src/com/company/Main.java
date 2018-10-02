@@ -11,40 +11,51 @@ public class Main {
     static int pilihanProblem; //Variabel untuk menampung pilihan user
     static int pilihanMetode; //Variabel untuk menampung pilihan user
     static int pilihanInpt; //Variabel untuk menampung pilihan user
+
+    static Matrix matriks;
 	
     public static void main(String[] args) throws IOException {
-        while (!selesai) {
-          System.out.println("MENU");
-          System.out.println("1. Sistem Persamaan Linear");
-          System.out.println("2. Interpolasi Problem");
-          System.out.println("3. Selesai");
-          System.out.print("Pilihan : ");
-          pilihanProblem = keyboard.nextInt(); //Memasukkan pilihan problem
+      while (!selesai) {
+        System.out.println("MENU");
+        System.out.println("1. Sistem Persamaan Linear");
+        System.out.println("2. Interpolasi Problem");
+        System.out.println("3. Selesai");
+        System.out.print("Pilihan : ");
+        pilihanProblem = keyboard.nextInt(); //Memasukkan pilihan problem
 
-          if (pilihanProblem == 3){
-            selesai = true; //Menghentikan program
+        if (pilihanProblem == 3){
+          selesai = true; //Menghentikan program
+        }
+
+        if (!selesai){
+          System.out.println("Metode Input");
+          System.out.println("1. File txt eksternal");
+          System.out.println("2. Matriks masukkan");
+          System.out.print("Pilihan : ");
+          pilihanInpt = keyboard.nextInt(); //Memasukkan pilihan metode input
+
+          if (pilihanInpt == 1){
+            BacaFile(mtrxHasil,NBrsEff,NKolEff);
+          } else{
+            BacaMatriks(mtrxHasil,NBrsEff,NKolEff);
           }
 
-          if (!selesai){
-            System.out.println("Metode Input");
-            System.out.println("1. File txt eksternal");
-            System.out.println("2. Matriks masukkan");
-            System.out.print("Pilihan : ");
-            pilihanInpt = keyboard.nextInt(); //Memasukkan pilihan metode input
+          System.out.println("Metode Penyelesaian");
+          System.out.println("1. Eleminasi Gauss");
+          System.out.println("2. Eleminasi GaussJordan");
+          System.out.print("Pilihan : ");
+          pilihanMetode = keyboard.nextInt(); //Memasukkan pilihan metode penyelesaian
 
-            if (pilihanInpt == 1){
-              BacaFile(mtrxHasil,NBrsEff,NKolEff);
-            } else{
-              BacaMatriks(mtrxHasil,NBrsEff,NKolEff);
-            }
+          if (pilihanMetode == 1) {
+            System.out.println("Sedang menghitung...");
+            System.out.println("Jawaban :");
+            System.out.println(matriks.solutionG());
+            System.out.println("");
+          } else if (pilihanMetode == 2) {
 
-            System.out.println("Metode Penyelesaian");
-            System.out.println("1. Eleminasi Gauss");
-            System.out.println("2. Eleminasi GaussJordan");
-            System.out.print("Pilihan : ");
-            pilihanMetode = keyboard.nextInt(); //Memasukkan pilihan metode penyelesaian
           }
         }
+      }
     }
 
     static void BacaMatriks (Double[][] mtrxHasil, int NBrsEff, int NKolEff)
@@ -60,6 +71,7 @@ public class Main {
          mtrxHasil[i][j] = keyboard.nextDouble(); //Memasukkan data matriks
        }
      }
+     matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
    }
 
    static void BacaFile (Double[][] mtrxHasil, int NBrsEff, int NKolEff) throws IOException
@@ -108,6 +120,8 @@ public class Main {
         mtrxHasil[i][j] = Double.parseDouble(isiFile[i][j]); //Mengisi matriks double dengan matriks string yang sudah dikonversi
        }
      }
+
+     matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
    }
 
    static void interpolasi(Double[][] mtrxHasil, int NBrsEff, int NKolEff)

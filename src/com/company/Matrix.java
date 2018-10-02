@@ -83,7 +83,8 @@ public class Matrix {
         int ct; // counter variabel
         String solution;
 
-        Double[][] mat = this.matOri;
+        // ubah matriks original menjadi bentuk eselon dengan menggunakan metode gauss
+        Double[][] mat = gauss(this.matOri);
 
         /* Parametrik Check */
         boolean parametrik = false; // parametrik solution indicator
@@ -105,7 +106,7 @@ public class Matrix {
             for (i=this.NBrsEff; i>=1; i--) {
                 for (j=1; j<=this.NKolEff; j++) {
                     if (mat[i][j] == 1) {
-                        for (k=i-1; k>=0; k--) {
+                        for (k=i-1; k>=1; k--) {
                             mult = mat[k][j];
                             mat[k][j] = 0.0;
                             mat[k][this.NKolEffAug] -= mult * mat[i][this.NKolEffAug];
@@ -128,7 +129,7 @@ public class Matrix {
                     constCharIdx = searchFreeVarIdx(freeVarCol, freeVarColCount, j);
                     solution += "x" + Integer.toString(j) + " = " + constChar[constCharIdx];
                 } else {
-                    for (i=0; i<this.NBrsEff; i++) {
+                    for (i=1; i<=this.NBrsEff; i++) {
                         if (mat[i][j] == 1) {
                             solution += "x" + Integer.toString(j) + " =";
                             if (mat[i][this.NKolEffAug] != 0) {
@@ -225,7 +226,7 @@ public class Matrix {
             for (i=this.NBrsEff; i>=1; i--) {
                 for (j=1; j<=this.NKolEff; j++) {
                     if (mat[i][j] == 1) {
-                        for (k=i-1; k>=0; k--) {
+                        for (k=i-1; k>=1; k--) {
                             mult = mat[k][j];
                             mat[k][j] = 0.0;
                             mat[k][this.NKolEffAug] -= mult * mat[i][this.NKolEffAug];
@@ -248,7 +249,7 @@ public class Matrix {
                     constCharIdx = searchFreeVarIdx(freeVarCol, freeVarColCount, j);
                     solution += "x" + Integer.toString(j) + " = " + constChar[constCharIdx];
                 } else {
-                    for (i=0; i<this.NBrsEff; i++) {
+                    for (i=1; i<=this.NBrsEff; i++) {
                         if (mat[i][j] == 1) {
                             solution += "x" + Integer.toString(j) + " =";
                             if (mat[i][this.NKolEffAug] != 0) {
@@ -322,12 +323,12 @@ public class Matrix {
 
 
     // Gauss Elimination Method
-    //Procedur Swap Baris
-    static void SwapBaris(double[][] Matriks, int NKolEff, int Brs1, int Brs2){
+    // Procedur Swap Baris
+    private void SwapBaris(Double[][] Matriks, int Brs1, int Brs2){
             //Brs1 dan Brs2 merupakan matriks yang mau di swap
             int j;
             double Temp;
-            for (j=1;j<=NKolEff;j++){
+            for (j=1; j<=this.NKolEffAug; j++){
                 Temp=Matriks[Brs1][j];
                 Matriks[Brs1][j]=Matriks[Brs2][j];
                 Matriks[Brs2][j]=Temp;
@@ -335,7 +336,7 @@ public class Matrix {
     }
     
     //Procedur Gauss
-    static void Gauss(double[][] mtrxHasil, int NBrsEff, int NKolEff){
+    public Double[][] gauss(Double[][] mtrxInp){
         /*KAMUS*/
         int i, j, k;
         int pass;
@@ -345,45 +346,42 @@ public class Matrix {
 
         /*ALGORITMA*/
         //Mencari maksimum dari kolom pertama
-        Max=mtrxHasil[1][1];
+        Max=mtrxInp[1][1];
         BrsMax=1;
         for (i=2;i<=NBrsEff;i++){
-            if (mtrxHasil[i][1]>Max){
-                Max=mtrxHasil[i][1];
+            if (mtrxInp[i][1]>Max){
+                Max=mtrxInp[i][1];
                 BrsMax=i;
             }
         }
         
         //Baris di swap
-        SwapBaris(mtrxHasil, NKolEff, 1, BrsMax);
-        
+        SwapBaris(mtrxInp, 1, BrsMax);
 
-        for (pass=1;pass<=NKolEff-2;pass++){
+        for (pass=1;pass<=this.NKolEffAug-2;pass++){
             for (i=pass+1;i<=NBrsEff;i++){
-                Temp=mtrxHasil[i][pass]/mtrxHasil[pass][pass];
-                for (j=1;j<=NKolEff;j++){
-                    
-                    mtrxHasil[i][j]=mtrxHasil[i][j]-(Temp*mtrxHasil[pass][j]);
-                   
+                Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
+                for (j=1;j<=this.NKolEffAug;j++){
+                    mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
                 }
             }
         }
 
         for (i=1;i<=NBrsEff;i++){
-            for (j=1;j<=NKolEff;j++){
-                if (mtrxHasil[i][j]!=0.0){
-                    Temp=mtrxHasil[i][j];
-                    for (k=1;k<=NKolEff;k++){
-                        if (mtrxHasil[i][k]!=0.0){
-                            mtrxHasil[i][k]=mtrxHasil[i][k]/Temp;
+            for (j=1;j<=this.NKolEffAug;j++){
+                if (mtrxInp[i][j]!=0.0){
+                    Temp=mtrxInp[i][j];
+                    for (k=1;k<=this.NKolEffAug;k++){
+                        if (mtrxInp[i][k]!=0.0){
+                            mtrxInp[i][k]=mtrxInp[i][k]/Temp;
                         }
-                        
                     }
                     break;
                 }
             }
         }
 
+        return mtrxInp;
     }
     
     // Gauss-Jordan Elimination Method
