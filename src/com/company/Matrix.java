@@ -368,7 +368,7 @@ public class Matrix {
         }
 
         for (i=1;i<=NBrsEff;i++){
-            for (j=1;j<=this.NKolEffAug;j++){
+            for (j=1;j<=this.NKolEffAug-1;j++){
                 if (mtrxInp[i][j]!=0.0){
                     Temp=mtrxInp[i][j];
                     for (k=1;k<=this.NKolEffAug;k++){
