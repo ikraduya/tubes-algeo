@@ -204,7 +204,9 @@ public class Matrix {
         int ct; // counter variabel
         String solution;
 
-        Double[][] mat = this.matOri;
+        printmat(this.matOri);
+        Double[][] mat = gaussJordan(this.matOri);
+        printmat(mat);
 
         /* Parametrik Check */
         boolean parametrik = false; // parametrik solution indicator
@@ -308,9 +310,8 @@ public class Matrix {
         return (solution);
     }
 
-    public void printmat() {
+    public void printmat(Double[][] mat) {
         int i, j;
-        Double[][] mat = this.matOri;
 
         for (i=1; i<=this.NBrsEff; i++) {
             for (j=1; j<=this.NKolEffAug; j++) {
@@ -336,7 +337,7 @@ public class Matrix {
     }
     
     //Procedur Gauss
-    public Double[][] gauss(Double[][] mtrxInp){
+    private Double[][] gauss(Double[][] mtrxInp){
         /*KAMUS*/
         int i, j, k;
         int pass;
@@ -387,24 +388,25 @@ public class Matrix {
     }
     
     // Gauss-Jordan Elimination Method
-    static void GaussJordan(double[][] Matriks, int NBrsEff, int NKolEff){
+    private Double[][] gaussJordan(Double[][] mtrxInp){
         /*KAMUS*/
         int i, j, k;
         double Temp;
         /*ALGORITMA*/
         //Mengubah matriks jadi bentuk row echelon
-        Gauss(Matriks, NBrsEff, NKolEff);
+        mtrxInp = gauss(mtrxInp);
+        printmat(mtrxInp);
         //Reverse engineering Gauss
-        for (k=NBrsEff;k>=1;k--){
-            for (i=k-1;i>=1;i--){
-                Temp=Matriks[i][k]/Matriks[k][k];
-                for (j=NKolEff;j>=1;j--){
-                    Matriks[i][j]-=Temp*Matriks[k][j];
+        for (k=this.NBrsEff;k>=1;k--){
+            for (i=k-1; i>=1; i--){
+                Temp = mtrxInp[i][k]/mtrxInp[k][k];
+                for (j=this.NKolEffAug;j>=1;j--){
+                    mtrxInp[i][j] -= Temp*mtrxInp[k][j];
                 }
             }
         }
         
-
+        return mtrxInp;
     }
 
     // Interpolate Matrix

@@ -42,17 +42,22 @@ public class Main {
 
           System.out.println("Metode Penyelesaian");
           System.out.println("1. Eleminasi Gauss");
-          System.out.println("2. Eleminasi GaussJordan");
+          System.out.println("2. Eleminasi Gauss-Jordan");
           System.out.print("Pilihan : ");
           pilihanMetode = keyboard.nextInt(); //Memasukkan pilihan metode penyelesaian
 
           if (pilihanMetode == 1) {
+            System.out.println("Metode eliminasi Gauss dipilih");
             System.out.println("Sedang menghitung...");
             System.out.println("Jawaban :");
             System.out.println(matriks.solutionG());
             System.out.println("");
           } else if (pilihanMetode == 2) {
-
+            System.out.println("Metode eliminasi Gauss-Jordan dipilih");
+            System.out.println("Sedang menghitung...");
+            System.out.println("Jawaban :");
+            System.out.println(matriks.solutionGJ());
+            System.out.println("");
           }
         }
       }
