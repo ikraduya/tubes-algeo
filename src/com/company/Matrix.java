@@ -380,16 +380,6 @@ public class Matrix {
 
       //Membentuk segitiga 0 di kiri bawah
       for (pass=1;pass<=this.NKolEffAug-2;pass++){
-          for (i=pass+1;i<=this.NBrsEffAug;i++){
-              Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
-              for (j=1;j<=this.NKolEffAug;j++){
-                  mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
-              }
-          }
-      }
-
-      //Membentuk leading coefficients dari tiap baris menjadi 1
-      for (pass=1;pass<=this.NKolEffAug-2;pass++){
             for (i=pass+1;i<=this.NBrsEffAug;i++){
                 if (BrsNol==0){
                     Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
@@ -400,7 +390,9 @@ public class Matrix {
                     if (i<BrsNol){
                         Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
                         for (j=1;j<=this.NKolEffAug;j++){
+                          if (mtrxInp[pass][pass]!=0){
                             mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
+                          }
                         }
                     }
                 }
@@ -408,7 +400,7 @@ public class Matrix {
                 
             }
         }
-      //Membentuk leading coefficients menjadi 1 pad setiap baris
+      //Membentuk leading coefficients menjadi 1 pada setiap baris
       for (i=1;i<=this.NBrsEffAug;i++){
               for (j=1;j<=this.NKolEffAug-1;j++){
                   if (mtrxInp[i][j]!=0.0){
