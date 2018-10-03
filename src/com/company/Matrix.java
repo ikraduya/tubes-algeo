@@ -16,8 +16,8 @@ public class Matrix {
   }
 
   private int[] obtainFreeVarCol(Double[][] mat)
-  // I.S augmented matrix, ukuran matrix
-  // F.S mengeluarkan array menunjukkan kolom mana saja yang merupakan free variabel (freeVarCol)
+  // I.S augmented matrix
+  // F.S mengeluarkan array yang menunjukkan kolom mana saja yang merupakan free variabel (freeVarCol)
   {
       int i, j;
 
@@ -50,7 +50,7 @@ public class Matrix {
       return freeVarCol;
   }
 
-  private static boolean isColFree(int[] arr, int arrLen, int x)
+  private boolean isColFree(int[] arr, int arrLen, int x)
   // I.S freeVarCol, neff freeVarCol, indeks kolom
   // F.S mengeluarkan true apabila kolom pada matriks tersebut merupakan variabel bebas
   {
@@ -62,7 +62,7 @@ public class Matrix {
       return false;
   }
 
-  private static int searchFreeVarIdx(int[] arr, int arrLen, int x)
+  private int searchFreeVarIdx(int[] arr, int arrLen, int x)
   // I.S freeVarCol, neff freeVarCol, indeks kolom (x)
   // F.S mengeluarkan indeks nilai x pada array freeVarCol
   {
@@ -76,7 +76,7 @@ public class Matrix {
   }
 
   public String solutionG()
-  // I.S augmented matrix yang telah berbentuk matriks eselon
+  // I.S
   // F.S mengeluarkan string solusi persamaan, tulisan "Tidak mempunyai solusi", ataupun solusi parametrik
   {
       int i, j;   // iterator var
@@ -197,7 +197,7 @@ public class Matrix {
   }
 
   public String solutionGJ()
-  // I.S augmented matrix yang telah berbentuk reduced row eselon form
+  // I.S
   // F.S mengeluarkan string solusi persamaan, tulisan "Tidak mempunyai solusi", ataupun solusi parametrik
   {
       int i, j;   // iterator var
@@ -407,7 +407,10 @@ public class Matrix {
   }
 
   // Interpolate Gauss
-  public Double[] interpolateG() {
+  public Double[] interpolateG()
+  // I.S
+  // F.S mengembalikan array yang berisi solusi dari permasalahan interpolasi yang diselesaikan dengan metode Gauss
+  {
     int i, j;   // iterator var
     Double[] solutionArr = new Double[this.NKolEff];
 
@@ -431,7 +434,10 @@ public class Matrix {
   }
 
   // Interpolate Gauss-Jordan
-  public Double[] interpolateGJ() {
+  public Double[] interpolateGJ()
+  // I.S
+  // F.S mengembalikan array yang berisi solusi dari permasalahan interpolasi yang diselesaikan dengan metode Gauss-Jordan
+  {
     int i, j;   // iterator var
     Double[] solutionArr = new Double[this.NKolEff];
 
