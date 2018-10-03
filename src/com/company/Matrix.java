@@ -337,28 +337,50 @@ public class Matrix {
   private Double[][] gauss(Double[][] mtrxInp){
       /*KAMUS*/
       int i, j, k;
-      int pass;
+      int pass, kol;
       double Max, Temp;
       int BrsMax;
+      int BrsNol=0;
+      boolean FoundBrsNol=false;
 
 
       /*ALGORITMA*/
-      //Mencari maksimum dari kolom pertama
-      Max=mtrxInp[1][1];
-      BrsMax=1;
-      for (i=2;i<=NBrsEff;i++){
-          if (mtrxInp[i][1]>Max){
-              Max=mtrxInp[i][1];
-              BrsMax=i;
-          }
-      }
-
-      //Baris di swap
-      SwapBaris(mtrxInp, 1, BrsMax);
+      //Mengurutkan maksimum-minimum dari leading coefficients tiap kolom
+        for (kol=1;kol<=this.NKolEffAug-2;kol++){
+            for (pass=kol;pass<=this.NBrsEffAug-1;pass++){
+                Max=Math.abs(mtrxInp[pass][kol]);
+                BrsMax=pass;
+                for (i=pass+1;i<=this.NBrsEffAug;i++){
+                    if (Math.abs(mtrxInp[i][kol])>Max){
+                        Max=Math.abs(mtrxInp[i][kol]);
+                        BrsMax=i;
+                        SwapBaris(mtrxInp, this.NKolEffAug, pass, BrsMax);
+                    }
+                    
+                }
+            }
+        }
+        if ((Math.abs(mtrxInp[this.NBrsEffAug][this.NKolEffAug-1])>Math.abs(mtrxInp[this.NBrsEffAug-1][this.NKolEffAug-1])) && (Math.abs(mtrxInp[this.NBrsEffAug][this.NKolEffAug-2])==Math.abs(mtrxInp[this.NBrsEffAug-1][this.NKolEffAug-2]))){
+            SwapBaris(mtrxInp, this.NKolEffAug, this.NBrsEffAug, this.NBrsEffAug-1);
+        }
+    
+      //Mencari baris pertama yang elemennya nol semua, indeks baris disimpan di BrsNol
+        i=1;
+        while (i<=this.NBrsEffAug && !FoundBrsNol){
+            for (j=1;j<=this.NKolEffAug-1;j++){
+                if (mtrxInp[i][j]!=0.0){
+                    break;
+                }else if (j==this.NKolEffAug-1){
+                    BrsNol=i;
+                    FoundBrsNol=true;
+                }
+            }
+            i++;
+        }
 
       //Membentuk segitiga 0 di kiri bawah
       for (pass=1;pass<=this.NKolEffAug-2;pass++){
-          for (i=pass+1;i<=NBrsEff;i++){
+          for (i=pass+1;i<=this.NBrsEffAug;i++){
               Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
               for (j=1;j<=this.NKolEffAug;j++){
                   mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
@@ -367,19 +389,40 @@ public class Matrix {
       }
 
       //Membentuk leading coefficients dari tiap baris menjadi 1
-      for (i=1;i<=NBrsEff;i++){
-          for (j=1;j<=this.NKolEffAug-1;j++){
-              if (mtrxInp[i][j]!=0.0){
-                  Temp=mtrxInp[i][j];
-                  for (k=1;k<=this.NKolEffAug;k++){
-                      if (mtrxInp[i][k]!=0.0){
-                          mtrxInp[i][k]=mtrxInp[i][k]/Temp;
+      for (pass=1;pass<=this.NKolEffAug-2;pass++){
+            for (i=pass+1;i<=this.NBrsEffAug;i++){
+                if (BrsNol==0){
+                    Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
+                        for (j=1;j<=this.NKolEffAug;j++){
+                            mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
+                        }
+                }else {
+                    if (i<BrsNol){
+                        Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
+                        for (j=1;j<=this.NKolEffAug;j++){
+                            mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
+                        }
+                    }
+                }
+                
+                
+            }
+        }
+      //Membentuk leading coefficients menjadi 1 pad setiap baris
+      for (i=1;i<=this.NBrsEffAug;i++){
+              for (j=1;j<=this.NKolEffAug-1;j++){
+                  if (mtrxInp[i][j]!=0.0){
+                      Temp=mtrxInp[i][j];
+                      for (k=1;k<=this.NKolEffAug;k++){
+                          if (mtrxInp[i][k]!=0.0){
+                              mtrxInp[i][k]=mtrxInp[i][k]/Temp;
+                          }
+
                       }
+                      break;
                   }
-                  break;
               }
-          }
-      }
+       }
 
       return mtrxInp;
   }
