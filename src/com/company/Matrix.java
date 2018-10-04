@@ -1,4 +1,4 @@
-package com.company;
+package.com.company;
 
 public class Matrix {
   Double[][] matOri;
@@ -333,6 +333,21 @@ public class Matrix {
           }
   }
 
+  static boolean ElemenKolomSama(Double[][] Matriks, int Kol, int Brs, int NBrsEff){
+        /*KAMUS*/
+        boolean AllSame=true;
+
+        /*ALGORITMA*/
+        for (int i=Brs;i <= (NBrsEff) -1;i++){
+            if (Matriks[i][Kol]!=Matriks[i+1][Kol]){
+                AllSame=false;
+                break;
+            }
+        }
+
+        return AllSame;
+    }
+
   //Procedur Gauss
   private Double[][] gauss(Double[][] mtrxInp){
       /*KAMUS*/
@@ -361,9 +376,9 @@ public class Matrix {
                             if (Math.abs(mtrxInp[i][kol])>Max){
                                 Max=Math.abs(mtrxInp[i][kol]);
                                 BrsMax=i;
-                                SwapBaris(mtrxInp, this.NKolEffAug, pass, BrsMax);
+                                SwapBaris(mtrxInp, pass, BrsMax);
                             }
-                            
+
                         }
 
                         pass++;
@@ -374,7 +389,7 @@ public class Matrix {
                 }
             }
         }
-    
+
       //Mencari baris pertama yang elemennya nol semua, indeks baris disimpan di BrsNol
         i=1;
         while (i<=this.NBrsEff && !FoundBrsNol){
@@ -404,11 +419,11 @@ public class Matrix {
                             if (mtrxInp[pass][pass]!=0){
                                 mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
                             }
-                            
+
                         }
                     }
                 }
-                        
+
             }
         }
       //Membentuk leading coefficients menjadi 1 pada setiap baris
@@ -420,7 +435,7 @@ public class Matrix {
                         if (mtrxInp[i][k]!=0.0){
                             mtrxInp[i][k]=mtrxInp[i][k]/Temp;
                         }
-                        
+
                     }
                     break;
                 }
@@ -442,7 +457,7 @@ public class Matrix {
       /*ALGORITMA*/
       //Mengubah matriks jadi bentuk row echelon
       mtrxInp = gauss(mtrxInp);
-      
+
       //Mencari baris pertama yang elemennya 0 semua
         i=1;
         while (i<=this.NBrsEff && !FoundBrsNol){
