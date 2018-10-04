@@ -1,10 +1,12 @@
 
+
 public class Matrix {
   Double[][] matOri;
 
   int NBrsEff;
   int NKolEff;
   int NKolEffAug;
+
 
   Matrix(Double[][] mtrxHasil, int NBrsEff, int NKolEff) {
       this.matOri = new Double[NBrsEff+1][NKolEff+1];
@@ -83,7 +85,26 @@ public class Matrix {
       String solution;
 
       // ubah matriks original menjadi bentuk eselon dengan menggunakan metode gauss
-      Double[][] mat = gauss(this.matOri);
+      Double[][] mat = metode(this.matOri,0);
+
+      /* No Solution Check */
+      boolean noSolution = false; // no solution indicator
+      ct = 0;
+      for (i=this.NBrsEff; i>=1; i--) {
+          ct = 0;
+          for (j=1; j<=this.NKolEff; j++) {
+              if (mat[i][j] == 0.0) {
+                  ct++;
+              }
+          }
+          if ((ct == this.NKolEff) && (mat[i][NKolEffAug] != 0)) {
+              noSolution = true;
+              break;
+          }
+      }
+      if (noSolution) {
+          return ("Solusi tidak ada");
+      }
 
       /* Parametrik Check */
       boolean parametrik = false; // parametrik solution indicator
@@ -91,7 +112,7 @@ public class Matrix {
       for (i=this.NBrsEff; i>=1; i--) {
           ct = 0;
           for (j=1; j<=this.NKolEffAug; j++) {
-              if (mat[i][j] == 0) {
+              if (mat[i][j] == 0.0) {
                   ct++;
               }
           }
@@ -157,24 +178,7 @@ public class Matrix {
           return (solution);
       }
 
-      /* No Solution Check */
-      boolean noSolution = false; // no solution indicator
-      ct = 0;
-      for (i=this.NBrsEff; i>=1; i--) {
-          ct = 0;
-          for (j=1; j<=this.NKolEff; j++) {
-              if (mat[i][j] == 0) {
-                  ct++;
-              }
-          }
-          if (ct == this.NKolEff) {
-              noSolution = true;
-              break;
-          }
-      }
-      if (noSolution) {
-          return ("Solusi tidak ada");
-      }
+
 
       /* Solution Check */
       Double mult;
@@ -203,7 +207,7 @@ public class Matrix {
       int ct; // counter variabel
       String solution;
 
-      Double[][] mat = gaussJordan(this.matOri);
+      Double[][] mat = metode(this.matOri,1);
 
       /* Parametrik Check */
       boolean parametrik = false; // parametrik solution indicator
@@ -321,167 +325,103 @@ public class Matrix {
 
   // Gauss Elimination Method
   // Procedur Swap Baris
-  private void SwapBaris(Double[][] Matriks, int NKolEffAug, int Brs1, int Brs2){
-          //Brs1 dan Brs2 merupakan matriks yang mau di swap
-          int j;
-          double Temp;
-          for (j=1; j<=NKolEffAug; j++){
-              Temp=Matriks[Brs1][j];
-              Matriks[Brs1][j]=Matriks[Brs2][j];
-              Matriks[Brs2][j]=Temp;
-          }
-  }
 
 
-  //Procedur Gauss
-  private Double[][] gauss(Double[][] mtrxInp){
-      /*KAMUS*/
-      int IdxBrsPivot;
-      int i, j;
-      int brs;
-      int kol;
-      Double Acuan;
-      boolean FoundPivot;
-
-      /*ALGORITMA*/
-      i=1;
-      j=1;
-      while (i<=this.NBrsEff && j<=this.NKolEffAug-1){
-          FoundPivot=false;
-          //pivot udah ketemu
-          if (mtrxInp[i][j]==1){
-              FoundPivot=true;
-              //Eliminasi kolom j dibawah baris i
-              for (brs=i+1;brs<=this.NBrsEff;brs++){
-                  Acuan=mtrxInp[brs][j]/mtrxInp[i][j];
-                  for (kol=j;kol<=this.NKolEffAug;kol++){
-                      if (mtrxInp[i][kol]!=0.0){
-                          mtrxInp[brs][kol]-=mtrxInp[i][kol]*Acuan;
-                      }
-                      
-                  }
-              }
-
-              i++;
-              j++;
-          }else{
-              //Mencari apakah ada angka 1 di kolom j dibawah baris i
-              brs=i+1;
-              while (!FoundPivot && brs<=this.NBrsEff){
-                  if (mtrxInp[brs][j]==1.0){
-                      FoundPivot=true;
-                      IdxBrsPivot=brs;
-                      SwapBaris(mtrxInp, this.NKolEffAug, IdxBrsPivot, i);
-                      //Eliminasi kolom j dibawah baris i
-                      for (brs=i+1;brs<=this.NBrsEff;brs++){
-                          Acuan=mtrxInp[brs][j]/mtrxInp[i][j];
-                          for (kol=j;kol<=this.NKolEffAug;kol++){
-                              if (mtrxInp[i][kol]!=0.0){
-                                  mtrxInp[brs][kol]-=mtrxInp[i][kol]*Acuan;
-                              }
-                          }
-                      }
-
-                      i++;
-                      j++;
-                  }else{
-                      brs++;
-                  }
-              }
-              //tidak ada angka 1 di kolom j
-              if (!FoundPivot){
-                  brs=i;
-                  //mencari angka selain 0 di kolom j dari baris i - NBrsEff
-                  while (!FoundPivot && brs<=this.NBrsEff){
-                      //ketemu angka selain 0
-                      if (mtrxInp[brs][j]!=0.0){
-                          FoundPivot=true;
-                          IdxBrsPivot=brs;
-                          SwapBaris(mtrxInp, this.NKolEffAug, IdxBrsPivot, i);
-                          //membagi baris pivot baru dengan elemen pivot
-                          Acuan=mtrxInp[i][j];
-                          for (kol=1;kol<=this.NKolEffAug;kol++){
-                              if (mtrxInp[i][kol]!=0.0){
-                                  mtrxInp[i][kol]/=Acuan;
-                              }
-                          }
-
-                          //Eliminasi kolom j dibawah baris i
-                          for (brs=i+1;brs<=this.NBrsEff;brs++){
-                              Acuan=mtrxInp[brs][j]/mtrxInp[i][j];
-                              for (kol=1;kol<=this.NKolEff;kol++){
-                                  if (mtrxInp[i][kol]!=0.0){
-                                      mtrxInp[brs][kol]-=mtrxInp[i][kol]*Acuan;
-                                  }
-                                  
-                              }
-                          }
-
-                          i++;
-                          j++;
-
-                      }else{
-                          brs++;
-                      }
-                  }
-                  //elemen kolom 0 semua
-                  if (!FoundPivot){
-                      j++;
-                  }
-              }
-          }
+  public Double[][] metode(Double[][] mtrxInp, int x){
+    int posisiBar = 1;
+    int searchBar;
+    int posisiKol = 1;
+    while (posisiKol <= NKolEff){
+      searchBar = posisiBar;
+      while ((mtrxInp[searchBar][posisiKol] != 1) && (searchBar < NBrsEff)){
+        searchBar++;
       }
+      if (mtrxInp[searchBar][posisiKol] != 1){
+        searchBar = posisiBar;
+        while ((mtrxInp[searchBar][posisiKol] == 0) && (searchBar < NBrsEff)){
+          searchBar++;
+        }
+      }
+      if (mtrxInp[searchBar][posisiKol] != 0){
+        swapBaris(mtrxInp, posisiBar, searchBar);
+      /*  TulisMatrix();
+        System.out.println("swapBaris");*/
+        Jadikan1(mtrxInp, mtrxInp[posisiBar][posisiKol], posisiBar);
+      /*  TulisMatrix();
+        System.out.println("Jadikan1");*/
+        EleminasiKolom(mtrxInp, x, posisiBar, posisiKol);
+      /*  TulisMatrix();
+        System.out.println("EleminasiKolom");*/
+        posisiBar++;
+      }
+      /*TulisMatrix(mtrxInp);
+      System.out.println("-");*/
+      posisiKol++;
 
-      return mtrxInp;
+    }
+    normalisasi(mtrxInp);
+    TulisMatrix(mtrxInp);
+    return mtrxInp;
   }
 
-  // Gauss-Jordan Elimination Method
-  private Double[][] gaussJordan(Double[][] mtrxInp){
-      /*KAMUS*/
-        int i, j, k;
-        double Temp;
-        int BrsNol=0;
-        boolean FoundBrsNol=false;
-
-
-      /*ALGORITMA*/
-      //Mengubah matriks jadi bentuk row echelon
-      mtrxInp = gauss(mtrxInp);
-
-      //Mencari baris pertama yang elemennya 0 semua
-        i=1;
-        while (i<=this.NBrsEff && !FoundBrsNol){
-            for (j=1;j<=this.NKolEffAug-1;j++){
-                if (mtrxInp[i][j]!=0.0){
-                    break;
-                }else if (j==this.NKolEffAug-1){
-                    BrsNol=i;
-                    FoundBrsNol=true;
-                }
-            }
-            i++;
-        }
-
-        //Jika nggak ada baris 0
-        if (BrsNol==0){
-            BrsNol=this.NBrsEff+1;
-        }
-
-        //Mengubah segitiga atas jadi 0
-        for (i=BrsNol-2;i>=1;i--){
-            for (j=this.NKolEffAug-1;j>=1;j--){
-                if (mtrxInp[i+1][j]==1){
-                    Temp=mtrxInp[i][j]/mtrxInp[i+1][j];     //Acuan
-                    for (k=this.NKolEffAug;k>=1;k--){
-                        mtrxInp[i][k]-=mtrxInp[i+1][k]*Temp;
-                    }
-
-                }
-            }
-        }
-
-      return mtrxInp;
+  public void swapBaris(Double[][] mtrxInp, int posisiBar, int searchBar){
+    Double temp;
+    for (int i = 1; i <= NKolEffAug; i++){
+      temp = mtrxInp[posisiBar][i];
+      mtrxInp[posisiBar][i] = mtrxInp[searchBar][i];
+      mtrxInp[searchBar][i] = temp;
+    }
   }
+
+  public void Jadikan1(Double[][] mtrxInp, Double pembagi, int posisiBar){
+    for (int i = 1; i <= NKolEffAug; i++){
+      mtrxInp[posisiBar][i] = mtrxInp[posisiBar][i] / pembagi;
+    }
+  }
+
+  public void EleminasiKolom(Double[][] mtrxInp, int x, int posisiBar, int posisiKol){
+    int mulaiBrs;
+    if (x == 0) //Gauss
+      mulaiBrs = posisiBar;
+    else //GaussJordan
+      mulaiBrs = 1;
+    for (int i = mulaiBrs; i <= NBrsEff; i++){
+      if (i != posisiBar){
+        EleminasiBaris(mtrxInp, i, mtrxInp[i][posisiKol] / mtrxInp[posisiBar][posisiKol], posisiBar, posisiKol);
+      }
+    }
+  }
+
+  public void EleminasiBaris(Double[][] mtrxInp, int brs, Double pengali, int posisiBar, int posisiKol){
+    for (int i =1; i <= NKolEffAug; i++){
+      mtrxInp[brs][i] -= mtrxInp[posisiBar][i]*pengali;
+    }
+  }
+
+  public void TulisMatrix(Double[][] mtrxInp){
+    for (int i = 1; i <= NBrsEff; i++){
+      for (int j = 1; j <= NKolEffAug; j++){
+        System.out.print(mtrxInp[i][j] + " ");
+      }
+      System.out.println();
+    }
+  }
+
+  public void normalisasi(Double[][] mtrxInp){
+    for (int i = 1; i <= NBrsEff; i++){
+      for (int j = 1; j <= NKolEffAug; j++){
+        if (mtrxInp[i][j]-1 == -1){
+          mtrxInp[i][j] = 0.0;
+        }
+      }
+    }
+  }
+
+
+
+
+
+
 
   // Interpolate Gauss
   public Double[] interpolateG()
@@ -492,7 +432,7 @@ public class Matrix {
     Double[] solutionArr = new Double[this.NKolEff];
 
     // ubah matriks original menjadi bentuk eselon dengan menggunakan metode gauss
-    Double[][] mat = gauss(this.matOri);
+    Double[][] mat = metode(this.matOri,0);
 
     /* Solution Check */
     Double mult;
@@ -518,7 +458,7 @@ public class Matrix {
     int i, j;   // iterator var
     Double[] solutionArr = new Double[this.NKolEff];
 
-    Double[][] mat = gaussJordan(this.matOri);
+    Double[][] mat = metode(this.matOri,1);
 
     /* Solution Check */
     for (i=1; i<=this.NBrsEff; i++) {
