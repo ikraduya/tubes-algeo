@@ -1,12 +1,7 @@
 package com.company;
 import java.io.*;
-import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.*;
+import java.lang.*;
 
 public class Main {
     static Double[][] mtrxHasil = new Double[100][100]; //Matriks untuk menyimpan data SPL. Asumsi memori matriks maksimal 100x100
@@ -43,9 +38,9 @@ public class Main {
           pilihanInpt = keyboard.nextInt(); //Memasukkan pilihan metode input
 
           if (pilihanInpt == 1) {
-            BacaFile(mtrxHasil, NBrsEff, NKolEff);
+            BacaFile();
           } else {
-            BacaMatriks(mtrxHasil, NBrsEff, NKolEff);
+            BacaMatriks();
           }
 
           System.out.println("Metode Penyelesaian");
@@ -57,15 +52,15 @@ public class Main {
           if (pilihanProblem == 2) {
             solusi = "";
             Double[] solInterpol;
-            interpolasi(mtrxHasil, NBrsEff, NKolEff);
+            interpolasi();
             if (pilihanMetode == 1) {
               solInterpol = matriks.interpolateG();
             } else {
               solInterpol = matriks.interpolateGJ();
             }
-            for (int i = 0; i <= solInterpol.length; i++) {
-              solusi += Double.toString(solInterpol[i]) + "x^" + Integer.toString(i);
-              if (i != solInterpol.length) {
+            for (int i = 0; i <= solInterpol.length-1; i++) {
+              solusi += String.valueOf(solInterpol[i]) + "x^" + String.valueOf(i);
+              if (i != solInterpol.length-1) {
                 solusi += " + ";
               }
             }
@@ -100,7 +95,7 @@ public class Main {
       }
     }
 
-    static void BacaMatriks (Double[][] mtrxHasil, int NBrsEff, int NKolEff)
+    static void BacaMatriks ()
     //I.S mtrxHasil, NBrsEff, dan NBrsKol sembarang.
     //F.S mtrxHasil, NBrsEff, dan NBrsKol terdefinisi sesuai inputan user
     {
@@ -116,7 +111,7 @@ public class Main {
      //matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
     }
 
-   static void BacaFile (Double[][] mtrxHasil, int NBrsEff, int NKolEff) throws IOException
+   static void BacaFile () throws IOException
    //I.S mtrxHasil, NBrsEff, dan NBrsKol sembarang
    //F.S mtrxHasil, NBrsEff, dan NBrsKol terdefinisi sesuai isi file
    {
@@ -163,7 +158,7 @@ public class Main {
        }
      }
 
-     matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
+     //matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
    }
 
    static void TulisKeFile (String solusi, String namaFileOutput)
@@ -181,7 +176,7 @@ public class Main {
         }
    }
 
-   static void interpolasi(Double[][] mtrxHasil, int NBrsEff, int NKolEff)
+   static void interpolasi()
    //I.S mtrsHasil, NBrsEff, NKolEff terdefinisi
    //F.S mengeluarkan hasil interpolasi
    {
@@ -193,15 +188,15 @@ public class Main {
       mtrxInter[i][NBrsEff+1] = mtrxHasil[i][2];
     }
     NKolEff = NBrsEff +1;
-    matriks = new Matrix(mtrxInter, NBrsEff, NKolEff);
+    //matriks = new Matrix(mtrxInter, NBrsEff, NKolEff);
     //Tinggal nunggu Gauss GaussJordan sma nunggu nama fungsi bagian ikra
    }
 
    static Double hasilFungsi (Double[] solInterpol,Double x)
    {
      Double hasil = 0.0;
-     for (int i = 0; i <= solInterpol.length; i++){
-       hasil += Math.pow(x,i);
+     for (int i = 0; i <= solInterpol.length-1; i++){
+       hasil += Math.pow(x,i) * solInterpol[i];
      }
      return hasil;
    }
