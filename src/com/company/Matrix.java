@@ -336,31 +336,43 @@ public class Matrix {
   //Procedur Gauss
   private Double[][] gauss(Double[][] mtrxInp){
       /*KAMUS*/
-      int i, j, k;
-      int pass, kol;
-      double Max, Temp;
-      int BrsMax;
-      int BrsNol=0;
-      boolean FoundBrsNol=false;
+        int i, j, k;
+        int pass;
+        int kol=1;
+        int brs=1;
+        double Max, Temp;
+        int BrsMax;
+        int BrsNol=0;
+        boolean FoundBrsNol=false;
 
       /*ALGORITMA*/
       //Mengurutkan maksimum-minimum dari leading coefficients tiap kolom
-        for (kol=1;kol<=this.NKolEffAug-2;kol++){
-            for (pass=kol;pass<= this.NBrsEff -1;pass++){
-                Max=Math.abs(mtrxInp[pass][kol]);
-                BrsMax=pass;
-                for (i=pass+1;i<=this.NBrsEff;i++){
-                    if (Math.abs(mtrxInp[i][kol])>Max){
-                        Max=Math.abs(mtrxInp[i][kol]);
-                        BrsMax=i;
-                        SwapBaris(mtrxInp, pass, BrsMax);
+        while (kol<=this.NKolEffAug-2){
+            while (brs<=this.NBrsEff-1){
+                if (ElemenKolomSama(mtrxInp, kol, brs, this.NBrsEff)){
+                    kol++;
+                    break;
+                }else{
+                    pass=brs;
+                    while (pass<=this.NBrsEff-1){
+                        Max=Math.abs(mtrxInp[pass][kol]);
+                        BrsMax=pass;
+                        for (i=pass+1;i<=this.NBrsEff;i++){
+                            if (Math.abs(mtrxInp[i][kol])>Max){
+                                Max=Math.abs(mtrxInp[i][kol]);
+                                BrsMax=i;
+                                SwapBaris(mtrxInp, this.NKolEffAug, pass, BrsMax);
+                            }
+                            
+                        }
+
+                        pass++;
                     }
-                    
+
+                    brs++;
+                    kol++;
                 }
             }
-        }
-        if ((Math.abs(mtrxInp[this.NBrsEff][this.NKolEffAug-1])>Math.abs(mtrxInp[this.NBrsEff-1][this.NKolEffAug-1])) && (Math.abs(mtrxInp[this.NBrsEff][this.NKolEffAug-2])==Math.abs(mtrxInp[this.NBrsEff-1][this.NKolEffAug-2]))){
-            SwapBaris(mtrxInp, this.NBrsEff, this.NBrsEff-1);
         }
     
       //Mencari baris pertama yang elemennya nol semua, indeks baris disimpan di BrsNol
@@ -378,7 +390,7 @@ public class Matrix {
         }
 
       //Membentuk segitiga 0 di kiri bawah
-      for (pass=1;pass<=this.NKolEffAug-2;pass++){
+        for (pass=1;pass<=this.NKolEffAug-2;pass++){
             for (i=pass+1;i<=this.NBrsEff;i++){
                 if (BrsNol==0){
                     Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
@@ -389,31 +401,31 @@ public class Matrix {
                     if (i<BrsNol){
                         Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
                         for (j=1;j<=this.NKolEffAug;j++){
-                          if (mtrxInp[pass][pass]!=0){
-                            mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
-                          }
+                            if (mtrxInp[pass][pass]!=0){
+                                mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
+                            }
+                            
                         }
                     }
                 }
-                
-                
+                        
             }
         }
       //Membentuk leading coefficients menjadi 1 pada setiap baris
-      for (i=1;i<=this.NBrsEff;i++){
-              for (j=1;j<=this.NKolEffAug-1;j++){
-                  if (mtrxInp[i][j]!=0.0){
-                      Temp=mtrxInp[i][j];
-                      for (k=1;k<=this.NKolEffAug;k++){
-                          if (mtrxInp[i][k]!=0.0){
-                              mtrxInp[i][k]=mtrxInp[i][k]/Temp;
-                          }
-
-                      }
-                      break;
-                  }
-              }
-       }
+        for (i=1;i<=this.NBrsEff;i++){
+            for (j=1;j<=this.NKolEffAug-1;j++){
+                if (mtrxInp[i][j]!=0.0){
+                    Temp=mtrxInp[i][j];
+                    for (k=1;k<=this.NKolEffAug;k++){
+                        if (mtrxInp[i][k]!=0.0){
+                            mtrxInp[i][k]=mtrxInp[i][k]/Temp;
+                        }
+                        
+                    }
+                    break;
+                }
+            }
+        }
 
       return mtrxInp;
   }
@@ -421,20 +433,47 @@ public class Matrix {
   // Gauss-Jordan Elimination Method
   private Double[][] gaussJordan(Double[][] mtrxInp){
       /*KAMUS*/
-      int i, j, k;
-      double Temp;
+        int i, j, k;
+        double Temp;
+        int BrsNol=0;
+        boolean FoundBrsNol=false;
+
+
       /*ALGORITMA*/
       //Mengubah matriks jadi bentuk row echelon
       mtrxInp = gauss(mtrxInp);
-      //Reverse engineering Gauss
-      for (k=this.NBrsEff;k>=1;k--){
-          for (i=k-1; i>=1; i--){
-              Temp = mtrxInp[i][k]/mtrxInp[k][k];
-              for (j=this.NKolEffAug;j>=1;j--){
-                  mtrxInp[i][j] -= Temp*mtrxInp[k][j];
-              }
-          }
-      }
+      
+      //Mencari baris pertama yang elemennya 0 semua
+        i=1;
+        while (i<=this.NBrsEff && !FoundBrsNol){
+            for (j=1;j<=this.NKolEffAug-1;j++){
+                if (mtrxInp[i][j]!=0.0){
+                    break;
+                }else if (j==this.NKolEffAug-1){
+                    BrsNol=i;
+                    FoundBrsNol=true;
+                }
+            }
+            i++;
+        }
+
+        //Jika nggak ada baris 0
+        if (BrsNol==0){
+            BrsNol=this.NBrsEff+1;
+        }
+
+        //Mengubah segitiga atas jadi 0
+        for (i=BrsNol-2;i>=1;i--){
+            for (j=this.NKolEffAug-1;j>=1;j--){
+                if (mtrxInp[i+1][j]==1){
+                    Temp=mtrxInp[i][j]/mtrxInp[i+1][j];     //Acuan
+                    for (k=this.NKolEffAug;k>=1;k--){
+                        mtrxInp[i][k]-=mtrxInp[i+1][k]*Temp;
+                    }
+
+                }
+            }
+        }
 
       return mtrxInp;
   }
