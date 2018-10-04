@@ -70,6 +70,7 @@ public class Main {
               x = keyboard.nextDouble();
               if (x != -999){
                 System.out.println(hasilFungsi(solInterpol,x));
+                x = keyboard.nextDouble();
               }
             }
       	  }
