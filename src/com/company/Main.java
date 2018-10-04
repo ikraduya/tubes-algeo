@@ -1,6 +1,12 @@
 package com.company;
 import java.io.*;
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Main {
     static Double[][] mtrxHasil = new Double[100][100]; //Matriks untuk menyimpan data SPL. Asumsi memori matriks maksimal 100x100
@@ -12,6 +18,7 @@ public class Main {
     static int pilihanMetode; //Variabel untuk menampung pilihan user
     static int pilihanInpt; //Variabel untuk menampung pilihan user
     static String solusi; //Variabel untuk menampung hasil solusi agar bisa dimasukkan ke file eksternal
+    static String namaFileOutput; //Variabel unruk menyimpan nama file eksternal yang menampung output
 
     static Matrix matriks;
 
@@ -70,7 +77,6 @@ public class Main {
               x = keyboard.nextDouble();
               if (x != -999){
                 System.out.println(hasilFungsi(solInterpol,x));
-                x = keyboard.nextDouble();
               }
             }
       	  }
@@ -89,6 +95,10 @@ public class Main {
              System.out.println();
 
         }
+        System.out.print("Masukkan nama file :");
+        namaFileOutput = keyboard.next();
+        TulisKeFile(solusi,namaFileOutput);
+
       }
     }
 
@@ -156,6 +166,21 @@ public class Main {
      }
 
      matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
+   }
+
+   static void TulisKeFile (String solusi, String namaFileOutput)
+   //I.S solusi terdefinsi. file eksternal sembarang
+   //F.S mengisi file eksternal dengan solusi
+   {
+     try {
+            PrintWriter out = new PrintWriter(new BufferedWriter(
+                    new FileWriter(namaFileOutput, true)));
+            out.println(solusi);
+            out.close();
+        } catch (IOException e) {
+            System.out.println("Gagal menulis ke file " + namaFile);
+            e.printStackTrace();
+        }
    }
 
    static void interpolasi(Double[][] mtrxHasil, int NBrsEff, int NKolEff)
