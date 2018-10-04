@@ -88,9 +88,15 @@ public class Main {
             System.out.println();
 
           }
-          System.out.print("Masukkan nama file :");
-          namaFileOutput = keyboard.next();
-          TulisKeFile(solusi, namaFileOutput);
+          System.out.println("1. Masukkan solusi ke file eksternal");
+          System.out.println("2. Tidak perlu, makasih");
+          System.out.print("Pilihan : ");
+          pilihanInpt = keyboard.nextInt();
+          if (pilihanInpt == 1){
+            System.out.print("Masukkan nama file :");
+            namaFileOutput = keyboard.next();
+            TulisKeFile(solusi, namaFileOutput);
+          }
         }
       }
     }
