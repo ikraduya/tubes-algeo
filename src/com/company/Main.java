@@ -1,4 +1,4 @@
-package com.company;
+
 import java.io.*;
 import java.util.*;
 import java.lang.*;
@@ -26,8 +26,8 @@ public class Main {
         System.out.print("Pilihan : ");
         pilihanProblem = keyboard.nextInt(); //Memasukkan pilihan problem
 
-        if (pilihanProblem == 3) {
-          selesai = true; //Menghentikan program
+        if (pilihanProblem == 3){
+          selesai = true;
         }
 
         if (!selesai) {
@@ -51,7 +51,7 @@ public class Main {
 
           if (pilihanProblem == 2) {
             solusi = "";
-            Double[] solInterpol;
+            Double[] solInterpol =  new Double[100];
             interpolasi();
             if (pilihanMetode == 1) {
               solInterpol = matriks.interpolateG();
@@ -66,7 +66,7 @@ public class Main {
             }
             System.out.println(solusi);
             Double x = 0.0;
-            while (x == -999) {
+            while (x != -999) {
               System.out.print("Masukkan X, masukkan -999 untuk berhenti : ");
               x = keyboard.nextDouble();
               if (x != -999) {
@@ -95,7 +95,7 @@ public class Main {
       }
     }
 
-    static void BacaMatriks ()
+    public static void BacaMatriks ()
     //I.S mtrxHasil, NBrsEff, dan NBrsKol sembarang.
     //F.S mtrxHasil, NBrsEff, dan NBrsKol terdefinisi sesuai inputan user
     {
@@ -111,7 +111,7 @@ public class Main {
      //matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
     }
 
-   static void BacaFile () throws IOException
+   public static void BacaFile () throws IOException
    //I.S mtrxHasil, NBrsEff, dan NBrsKol sembarang
    //F.S mtrxHasil, NBrsEff, dan NBrsKol terdefinisi sesuai isi file
    {
@@ -119,7 +119,9 @@ public class Main {
      String[][] isiFile = new String[100][100]; //Variabel untuk menampung isi file
      int Kol = 1; //Inisiasi jumlah kolom minimal. Asumsi file tidak pernah kosong
      int Brs = 1; //Inisiasi jumlah baris minimal. Asumsi file tidak pernah kosong
-     String NamaFile; //Variabel untuk menampung nama file
+     String NamaFile = ""; //Variabel untuk menampung nama file
+     NKolEff = 1;
+     NBrsEff = 1;
      System.out.print("Masukkan NamaFile : ");
      NamaFile = keyboard.next(); //Memasukkan nama file
      try {
@@ -154,14 +156,14 @@ public class Main {
      NKolEff = NKolEff / NBrsEff; //jumlah kolom matriks
      for (int i = 1; i <= NBrsEff; i += 1){
        for (int j = 1; j <= NKolEff; j += 1){
-        mtrxHasil[i][j] = Double.parseDouble(isiFile[i][j]); //Mengisi matriks double dengan matriks string yang sudah dikonversi
+        mtrxHasil[i][j] = Double.valueOf(isiFile[i][j]); //Mengisi matriks double dengan matriks string yang sudah dikonversi
        }
      }
 
      //matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
    }
 
-   static void TulisKeFile (String solusi, String namaFileOutput)
+   public static void TulisKeFile (String solusi, String namaFileOutput)
    //I.S solusi terdefinsi. file eksternal sembarang
    //F.S mengisi file eksternal dengan solusi
    {
@@ -176,7 +178,7 @@ public class Main {
         }
    }
 
-   static void interpolasi()
+   public static void interpolasi()
    //I.S mtrsHasil, NBrsEff, NKolEff terdefinisi
    //F.S mengeluarkan hasil interpolasi
    {
@@ -188,11 +190,10 @@ public class Main {
       mtrxInter[i][NBrsEff+1] = mtrxHasil[i][2];
     }
     NKolEff = NBrsEff +1;
-    //matriks = new Matrix(mtrxInter, NBrsEff, NKolEff);
-    //Tinggal nunggu Gauss GaussJordan sma nunggu nama fungsi bagian ikra
+    matriks = new Matrix(mtrxInter, NBrsEff, NKolEff);
    }
 
-   static Double hasilFungsi (Double[] solInterpol,Double x)
+   public static Double hasilFungsi (Double[] solInterpol,Double x)
    {
      Double hasil = 0.0;
      for (int i = 0; i <= solInterpol.length-1; i++){
