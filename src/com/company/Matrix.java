@@ -119,7 +119,7 @@ public class Matrix {
           // Obtain free var col
           int[] freeVarCol = obtainFreeVarCol(mat);
           int freeVarColCount = freeVarCol.length;
-
+          // freeVarCol = [2, 3]
           // Produce solution
           solution = "";
           char[] constChar = { 's', 't', 'u', 'v', 'w', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
@@ -343,30 +343,29 @@ public class Matrix {
       int BrsNol=0;
       boolean FoundBrsNol=false;
 
-
       /*ALGORITMA*/
       //Mengurutkan maksimum-minimum dari leading coefficients tiap kolom
         for (kol=1;kol<=this.NKolEffAug-2;kol++){
-            for (pass=kol;pass<=this.NBrsEffAug-1;pass++){
+            for (pass=kol;pass<= this.NBrsEff -1;pass++){
                 Max=Math.abs(mtrxInp[pass][kol]);
                 BrsMax=pass;
-                for (i=pass+1;i<=this.NBrsEffAug;i++){
+                for (i=pass+1;i<=this.NBrsEff;i++){
                     if (Math.abs(mtrxInp[i][kol])>Max){
                         Max=Math.abs(mtrxInp[i][kol]);
                         BrsMax=i;
-                        SwapBaris(mtrxInp, this.NKolEffAug, pass, BrsMax);
+                        SwapBaris(mtrxInp, pass, BrsMax);
                     }
                     
                 }
             }
         }
-        if ((Math.abs(mtrxInp[this.NBrsEffAug][this.NKolEffAug-1])>Math.abs(mtrxInp[this.NBrsEffAug-1][this.NKolEffAug-1])) && (Math.abs(mtrxInp[this.NBrsEffAug][this.NKolEffAug-2])==Math.abs(mtrxInp[this.NBrsEffAug-1][this.NKolEffAug-2]))){
-            SwapBaris(mtrxInp, this.NKolEffAug, this.NBrsEffAug, this.NBrsEffAug-1);
+        if ((Math.abs(mtrxInp[this.NBrsEff][this.NKolEffAug-1])>Math.abs(mtrxInp[this.NBrsEff-1][this.NKolEffAug-1])) && (Math.abs(mtrxInp[this.NBrsEff][this.NKolEffAug-2])==Math.abs(mtrxInp[this.NBrsEff-1][this.NKolEffAug-2]))){
+            SwapBaris(mtrxInp, this.NBrsEff, this.NBrsEff-1);
         }
     
       //Mencari baris pertama yang elemennya nol semua, indeks baris disimpan di BrsNol
         i=1;
-        while (i<=this.NBrsEffAug && !FoundBrsNol){
+        while (i<=this.NBrsEff && !FoundBrsNol){
             for (j=1;j<=this.NKolEffAug-1;j++){
                 if (mtrxInp[i][j]!=0.0){
                     break;
@@ -380,7 +379,7 @@ public class Matrix {
 
       //Membentuk segitiga 0 di kiri bawah
       for (pass=1;pass<=this.NKolEffAug-2;pass++){
-            for (i=pass+1;i<=this.NBrsEffAug;i++){
+            for (i=pass+1;i<=this.NBrsEff;i++){
                 if (BrsNol==0){
                     Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
                         for (j=1;j<=this.NKolEffAug;j++){
@@ -401,7 +400,7 @@ public class Matrix {
             }
         }
       //Membentuk leading coefficients menjadi 1 pada setiap baris
-      for (i=1;i<=this.NBrsEffAug;i++){
+      for (i=1;i<=this.NBrsEff;i++){
               for (j=1;j<=this.NKolEffAug-1;j++){
                   if (mtrxInp[i][j]!=0.0){
                       Temp=mtrxInp[i][j];
@@ -427,7 +426,6 @@ public class Matrix {
       /*ALGORITMA*/
       //Mengubah matriks jadi bentuk row echelon
       mtrxInp = gauss(mtrxInp);
-      printmat(mtrxInp);
       //Reverse engineering Gauss
       for (k=this.NBrsEff;k>=1;k--){
           for (i=k-1; i>=1; i--){
