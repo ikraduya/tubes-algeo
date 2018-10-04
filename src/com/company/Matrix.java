@@ -322,125 +322,116 @@ public class Matrix {
 
   // Gauss Elimination Method
   // Procedur Swap Baris
-  private void SwapBaris(Double[][] Matriks, int Brs1, int Brs2){
+  private void SwapBaris(Double[][] Matriks, int NKolEffAug; int Brs1, int Brs2){
           //Brs1 dan Brs2 merupakan matriks yang mau di swap
           int j;
           double Temp;
-          for (j=1; j<=this.NKolEffAug; j++){
+          for (j=1; j<=NKolEffAug; j++){
               Temp=Matriks[Brs1][j];
               Matriks[Brs1][j]=Matriks[Brs2][j];
               Matriks[Brs2][j]=Temp;
           }
   }
 
-  static boolean ElemenKolomSama(Double[][] Matriks, int Kol, int Brs, int NBrsEff){
-        /*KAMUS*/
-        boolean AllSame=true;
-
-        /*ALGORITMA*/
-        for (int i=Brs;i <= (NBrsEff) -1;i++){
-            if (Matriks[i][Kol]!=Matriks[i+1][Kol]){
-                AllSame=false;
-                break;
-            }
-        }
-
-        return AllSame;
-    }
 
   //Procedur Gauss
   private Double[][] gauss(Double[][] mtrxInp){
       /*KAMUS*/
-        int i, j, k;
-        int pass;
-        int kol=1;
-        int brs=1;
-        double Max, Temp;
-        int BrsMax;
-        int BrsNol=0;
-        boolean FoundBrsNol=false;
+      int IdxBrsPivot;
+      int i, j;
+      int brs;
+      int kol;
+      Double Acuan;
+      boolean FoundPivot;
 
       /*ALGORITMA*/
-      //Mengurutkan maksimum-minimum dari leading coefficients tiap kolom
-        while (kol<=this.NKolEffAug-2){
-            while (brs<=this.NBrsEff-1){
-                if (ElemenKolomSama(mtrxInp, kol, brs, this.NBrsEff)){
-                    kol++;
-                    break;
-                }else{
-                    pass=brs;
-                    while (pass<=this.NBrsEff-1){
-                        Max=Math.abs(mtrxInp[pass][kol]);
-                        BrsMax=pass;
-                        for (i=pass+1;i<=this.NBrsEff;i++){
-                            if (Math.abs(mtrxInp[i][kol])>Max){
-                                Max=Math.abs(mtrxInp[i][kol]);
-                                BrsMax=i;
-                                SwapBaris(mtrxInp, pass, BrsMax);
-                            }
+      i=1;
+      j=1;
+      while (i<=this.NBrsEff && j<=this.NKolEffAug-1){
+          FoundPivot=false;
+          //pivot udah ketemu
+          if (mtrxInp[i][j]==1){
+              FoundPivot=true;
+              //Eliminasi kolom j dibawah baris i
+              for (brs=i+1;brs<=this.NBrsEff;brs++){
+                  Acuan=mtrxInp[brs][j]/mtrxInp[i][j];
+                  for (kol=j;kol<=this.NKolEffAug;kol++){
+                      if (mtrxInp[i][kol]!=0.0){
+                          mtrxInp[brs][kol]-=mtrxInp[i][kol]*Acuan;
+                      }
+                      
+                  }
+              }
 
-                        }
+              i++;
+              j++;
+          }else{
+              //Mencari apakah ada angka 1 di kolom j dibawah baris i
+              brs=i+1;
+              while (!FoundPivot && brs<=this.NBrsEff){
+                  if (mtrxInp[brs][j]==1.0){
+                      FoundPivot=true;
+                      IdxBrsPivot=brs;
+                      SwapBaris(mtrxInp, this.NKolEffAug, IdxBrsPivot, i);
+                      //Eliminasi kolom j dibawah baris i
+                      for (brs=i+1;brs<=this.NBrsEff;brs++){
+                          Acuan=mtrxInp[brs][j]/mtrxInp[i][j];
+                          for (kol=j;kol<=this.NKolEffAug;kol++){
+                              if (mtrxInp[i][kol]!=0.0){
+                                  mtrxInp[brs][kol]-=mtrxInp[i][kol]*Acuan;
+                              }
+                          }
+                      }
 
-                        pass++;
-                    }
+                      i++;
+                      j++;
+                  }else{
+                      brs++;
+                  }
+              }
+              //tidak ada angka 1 di kolom j
+              if (!FoundPivot){
+                  brs=i;
+                  //mencari angka selain 0 di kolom j dari baris i - NBrsEff
+                  while (!FoundPivot && brs<=this.NBrsEff){
+                      //ketemu angka selain 0
+                      if (mtrxInp[brs][j]!=0.0){
+                          FoundPivot=true;
+                          IdxBrsPivot=brs;
+                          SwapBaris(mtrxInp, this.NKolEffAug, IdxBrsPivot, i);
+                          //membagi baris pivot baru dengan elemen pivot
+                          Acuan=mtrxInp[i][j];
+                          for (kol=1;kol<=this.NKolEffAug;kol++){
+                              if (mtrxInp[i][kol]!=0.0){
+                                  mtrxInp[i][kol]/=Acuan;
+                              }
+                          }
 
-                    brs++;
-                    kol++;
-                }
-            }
-        }
+                          //Eliminasi kolom j dibawah baris i
+                          for (brs=i+1;brs<=this.NBrsEff;brs++){
+                              Acuan=mtrxInp[brs][j]/mtrxInp[i][j];
+                              for (kol=1;kol<=this.NKolEff;kol++){
+                                  if (mtrxInp[i][kol]!=0.0){
+                                      mtrxInp[brs][kol]-=mtrxInp[i][kol]*Acuan;
+                                  }
+                                  
+                              }
+                          }
 
-      //Mencari baris pertama yang elemennya nol semua, indeks baris disimpan di BrsNol
-        i=1;
-        while (i<=this.NBrsEff && !FoundBrsNol){
-            for (j=1;j<=this.NKolEffAug-1;j++){
-                if (mtrxInp[i][j]!=0.0){
-                    break;
-                }else if (j==this.NKolEffAug-1){
-                    BrsNol=i;
-                    FoundBrsNol=true;
-                }
-            }
-            i++;
-        }
+                          i++;
+                          j++;
 
-      //Membentuk segitiga 0 di kiri bawah
-        for (pass=1;pass<=this.NKolEffAug-2;pass++){
-            for (i=pass+1;i<=this.NBrsEff;i++){
-                if (BrsNol==0){
-                    Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
-                        for (j=1;j<=this.NKolEffAug;j++){
-                            mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
-                        }
-                }else {
-                    if (i<BrsNol){
-                        Temp=mtrxInp[i][pass]/mtrxInp[pass][pass];
-                        for (j=1;j<=this.NKolEffAug;j++){
-                            if (mtrxInp[pass][pass]!=0){
-                                mtrxInp[i][j]=mtrxInp[i][j]-(Temp*mtrxInp[pass][j]);
-                            }
-
-                        }
-                    }
-                }
-
-            }
-        }
-      //Membentuk leading coefficients menjadi 1 pada setiap baris
-        for (i=1;i<=this.NBrsEff;i++){
-            for (j=1;j<=this.NKolEffAug-1;j++){
-                if (mtrxInp[i][j]!=0.0){
-                    Temp=mtrxInp[i][j];
-                    for (k=1;k<=this.NKolEffAug;k++){
-                        if (mtrxInp[i][k]!=0.0){
-                            mtrxInp[i][k]=mtrxInp[i][k]/Temp;
-                        }
-
-                    }
-                    break;
-                }
-            }
-        }
+                      }else{
+                          brs++;
+                      }
+                  }
+                  //elemen kolom 0 semua
+                  if (!FoundPivot){
+                      j++;
+                  }
+              }
+          }
+      }
 
       return mtrxInp;
   }
