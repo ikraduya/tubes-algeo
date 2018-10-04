@@ -31,21 +31,21 @@ public class Main {
         System.out.print("Pilihan : ");
         pilihanProblem = keyboard.nextInt(); //Memasukkan pilihan problem
 
-        if (pilihanProblem == 3){
+        if (pilihanProblem == 3) {
           selesai = true; //Menghentikan program
         }
 
-        if (!selesai){
+        if (!selesai) {
           System.out.println("Metode Input");
           System.out.println("1. File txt eksternal");
           System.out.println("2. Matriks masukkan");
           System.out.print("Pilihan : ");
           pilihanInpt = keyboard.nextInt(); //Memasukkan pilihan metode input
 
-          if (pilihanInpt == 1){
-            BacaFile(mtrxHasil,NBrsEff,NKolEff);
-          } else{
-            BacaMatriks(mtrxHasil,NBrsEff,NKolEff);
+          if (pilihanInpt == 1) {
+            BacaFile(mtrxHasil, NBrsEff, NKolEff);
+          } else {
+            BacaMatriks(mtrxHasil, NBrsEff, NKolEff);
           }
 
           System.out.println("Metode Penyelesaian");
@@ -54,51 +54,49 @@ public class Main {
           System.out.print("Pilihan : ");
           pilihanMetode = keyboard.nextInt(); //Memasukkan pilihan metode penyelesaian
 
-      	  if (pilihanProblem == 2){
-            solusi ="";
+          if (pilihanProblem == 2) {
+            solusi = "";
             Double[] solInterpol;
-      	  	interpolasi(mtrxHasil,NBrsEff,NKolEff);
-            if (pilihanMetode == 1){
-              solInterpol =  matriks.interpolateG();
+            interpolasi(mtrxHasil, NBrsEff, NKolEff);
+            if (pilihanMetode == 1) {
+              solInterpol = matriks.interpolateG();
+            } else {
+              solInterpol = matriks.interpolateGJ();
             }
-            else{
-              solInterpol =  matriks.interpolateGJ();
-            }
-            for (int i = 0; i <= solInterpol.length; i++){
+            for (int i = 0; i <= solInterpol.length; i++) {
               solusi += Double.toString(solInterpol[i]) + "x^" + Integer.toString(i);
-              if (i != solInterpol.length){
+              if (i != solInterpol.length) {
                 solusi += " + ";
               }
             }
             System.out.println(solusi);
-            Double x = new Double;
-            while (!cukup){
-              System.out.print("Masukkan X, masukkan -999 untuk berhenti : ")
+            Double x = 0.0;
+            while (x == -999) {
+              System.out.print("Masukkan X, masukkan -999 untuk berhenti : ");
               x = keyboard.nextDouble();
-              if (x != -999){
-                System.out.println(hasilFungsi(solInterpol,x));
+              if (x != -999) {
+                System.out.println(hasilFungsi(solInterpol, x));
               }
             }
-      	  }
-          else if (pilihanProblem == 1){
-             matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
-             if (pilihanMetode == 1) {
+          } else if (pilihanProblem == 1) {
+            matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
+            if (pilihanMetode == 1) {
               System.out.println("Metode eliminasi Gauss dipilih");
               solusi = matriks.solutionG();
-             } else if (pilihanMetode == 2) {
+            } else if (pilihanMetode == 2) {
               System.out.println("Metode eliminasi Gauss-Jordan dipilih");
               solusi = matriks.solutionGJ();
-             }
-             System.out.println("Sedang menghitung...");
-             System.out.println("Jawaban :");
-             System.out.println(solusi);
-             System.out.println();
+            }
+            System.out.println("Sedang menghitung...");
+            System.out.println("Jawaban :");
+            System.out.println(solusi);
+            System.out.println();
 
+          }
+          System.out.print("Masukkan nama file :");
+          namaFileOutput = keyboard.next();
+          TulisKeFile(solusi, namaFileOutput);
         }
-        System.out.print("Masukkan nama file :");
-        namaFileOutput = keyboard.next();
-        TulisKeFile(solusi,namaFileOutput);
-
       }
     }
 
@@ -178,7 +176,7 @@ public class Main {
             out.println(solusi);
             out.close();
         } catch (IOException e) {
-            System.out.println("Gagal menulis ke file " + namaFile);
+            System.out.println("Gagal menulis ke file " + namaFileOutput);
             e.printStackTrace();
         }
    }
@@ -199,9 +197,9 @@ public class Main {
     //Tinggal nunggu Gauss GaussJordan sma nunggu nama fungsi bagian ikra
    }
 
-   static Double hasilFungsi (Double[][] solInterpol,Double x)
+   static Double hasilFungsi (Double[] solInterpol,Double x)
    {
-     Double hasil = 0;
+     Double hasil = 0.0;
      for (int i = 0; i <= solInterpol.length; i++){
        hasil += Math.pow(x,i);
      }
