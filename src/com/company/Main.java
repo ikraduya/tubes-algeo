@@ -44,8 +44,8 @@ public class Main {
           }
 
           System.out.println("Metode Penyelesaian");
-          System.out.println("1. Eleminasi Gauss");
-          System.out.println("2. Eleminasi Gauss-Jordan");
+          System.out.println("1. Eliminasi Gauss");
+          System.out.println("2. Eliminasi Gauss-Jordan");
           System.out.print("Pilihan : ");
           pilihanMetode = keyboard.nextInt(); //Memasukkan pilihan metode penyelesaian
 
