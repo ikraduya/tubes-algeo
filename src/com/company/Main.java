@@ -130,6 +130,11 @@ public class Main {
      NBrsEff = 1;
      System.out.print("Masukkan NamaFile : ");
      NamaFile = keyboard.next(); //Memasukkan nama file
+     while (!(new File(NamaFile)).exists()) {
+      System.out.println("File tidak ditemukan, periksa kembali nama file!");
+      System.out.print("Masukkan NamaFile : ");
+      NamaFile = keyboard.next(); //Memasukkan nama file
+     }
      try {
         in = new FileReader(NamaFile); //Mempersiapkan variabel untuk pembacaan file
         int cc; //Variabel untuk menampung isi file per karakter
