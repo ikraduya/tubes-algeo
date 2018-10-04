@@ -1,4 +1,3 @@
-package.com.company;
 
 public class Matrix {
   Double[][] matOri;
@@ -322,7 +321,7 @@ public class Matrix {
 
   // Gauss Elimination Method
   // Procedur Swap Baris
-  private void SwapBaris(Double[][] Matriks, int NKolEffAug; int Brs1, int Brs2){
+  private void SwapBaris(Double[][] Matriks, int NKolEffAug, int Brs1, int Brs2){
           //Brs1 dan Brs2 merupakan matriks yang mau di swap
           int j;
           double Temp;
