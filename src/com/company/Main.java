@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Main {
-    static Double[][] mtrxHasil = new Double[100][100]; //Matriks untuk menyimpan data SPL
+    static Double[][] mtrxHasil = new Double[100][100]; //Matriks untuk menyimpan data SPL. Asumsi memori matriks maksimal 100x100
     static int NBrsEff = 1; //Jumlah baris mtrxHasil. Asumsi input tidak pernah kosong
     static int NKolEff = 1; //Jumlah kolom mtrxHasil. Asumsi input tidak pernah kosong
     static Scanner keyboard = new Scanner(System.in); //Variabel untuk menampung inputan dari keyboard
@@ -11,9 +11,10 @@ public class Main {
     static int pilihanProblem; //Variabel untuk menampung pilihan user
     static int pilihanMetode; //Variabel untuk menampung pilihan user
     static int pilihanInpt; //Variabel untuk menampung pilihan user
+    static String solusi; //Variabel untuk menampung hasil solusi agar bisa dimasukkan ke file eksternal
 
     static Matrix matriks;
-	
+
     public static void main(String[] args) throws IOException {
       while (!selesai) {
         System.out.println("MENU");
@@ -46,19 +47,46 @@ public class Main {
           System.out.print("Pilihan : ");
           pilihanMetode = keyboard.nextInt(); //Memasukkan pilihan metode penyelesaian
 
-          if (pilihanMetode == 1) {
-            System.out.println("Metode eliminasi Gauss dipilih");
-            System.out.println("Sedang menghitung...");
-            System.out.println("Jawaban :");
-            System.out.println(matriks.solutionG());
-            System.out.println("");
-          } else if (pilihanMetode == 2) {
-            System.out.println("Metode eliminasi Gauss-Jordan dipilih");
-            System.out.println("Sedang menghitung...");
-            System.out.println("Jawaban :");
-            System.out.println(matriks.solutionGJ());
-            System.out.println("");
-          }
+      	  if (pilihanProblem == 2){
+            solusi ="";
+            Double[] solInterpol;
+      	  	interpolasi(mtrxHasil,NBrsEff,NKolEff);
+            if (pilihanMetode == 1){
+              solInterpol =  matriks.interpolateG();
+            }
+            else{
+              solInterpol =  matriks.interpolateGJ();
+            }
+            for (int i = 0; i <= solInterpol.length; i++){
+              solusi += Double.toString(solInterpol[i]) + "x^" + Integer.toString(i);
+              if (i != solInterpol.length){
+                solusi += " + ";
+              }
+            }
+            System.out.println(solusi);
+            Double x = new Double;
+            while (!cukup){
+              System.out.print("Masukkan X, masukkan -999 untuk berhenti : ")
+              x = keyboard.nextDouble();
+              if (x != -999){
+                System.out.println(hasilFungsi(solInterpol,x));
+              }
+            }
+      	  }
+          else if (pilihanProblem == 1){
+             matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
+             if (pilihanMetode == 1) {
+              System.out.println("Metode eliminasi Gauss dipilih");
+              solusi = matriks.solutionG();
+             } else if (pilihanMetode == 2) {
+              System.out.println("Metode eliminasi Gauss-Jordan dipilih");
+              solusi = matriks.solutionGJ();
+             }
+             System.out.println("Sedang menghitung...");
+             System.out.println("Jawaban :");
+             System.out.println(solusi);
+             System.out.println();
+
         }
       }
     }
@@ -76,14 +104,14 @@ public class Main {
          mtrxHasil[i][j] = keyboard.nextDouble(); //Memasukkan data matriks
        }
      }
-     matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
-   }
+     //matriks = new Matrix(mtrxHasil, NBrsEff, NKolEff);
+    }
 
    static void BacaFile (Double[][] mtrxHasil, int NBrsEff, int NKolEff) throws IOException
    //I.S mtrxHasil, NBrsEff, dan NBrsKol sembarang
-   //F.S mtrxHasil, NBrsEff, dan NBrsKol terdefinisi sesuai isi file 	   
+   //F.S mtrxHasil, NBrsEff, dan NBrsKol terdefinisi sesuai isi file
    {
-     FileReader in = null; 
+     FileReader in = null;
      String[][] isiFile = new String[100][100]; //Variabel untuk menampung isi file
      int Kol = 1; //Inisiasi jumlah kolom minimal. Asumsi file tidak pernah kosong
      int Brs = 1; //Inisiasi jumlah baris minimal. Asumsi file tidak pernah kosong
@@ -140,6 +168,17 @@ public class Main {
       }
       mtrxInter[i][NBrsEff+1] = mtrxHasil[i][2];
     }
-    //Tinggal nunggu Gauss GaussJordan sma nunggu nama fungsi bagian ikra 
+    NKolEff = NBrsEff +1;
+    matriks = new Matrix(mtrxInter, NBrsEff, NKolEff);
+    //Tinggal nunggu Gauss GaussJordan sma nunggu nama fungsi bagian ikra
+   }
+
+   static Double hasilFungsi (Double[][] solInterpol,Double x)
+   {
+     Double hasil = 0;
+     for (int i = 0; i <= solInterpol.length; i++){
+       hasil += Math.pow(x,i);
+     }
+     return hasil;
    }
 }
