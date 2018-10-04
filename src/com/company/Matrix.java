@@ -171,7 +171,7 @@ public class Matrix {
                       }
                   }
               }
-              if (j != this.NBrsEff) {
+              if (j != this.NKolEff) {
                   solution += "\n";
               }
           }
@@ -274,7 +274,7 @@ public class Matrix {
                       }
                   }
               }
-              if (j != this.NBrsEff) {
+              if (j != this.NKolEff) {
                   solution += "\n";
               }
           }
